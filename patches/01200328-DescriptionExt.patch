@@ -1,0 +1,17 @@
+Index: A3-Antistasi-Greenfork/src/description.ext
+===================================================================
+--- A3-Antistasi-Greenfork.orig/src/description.ext	2020-03-28 14:20:49.315712670 +0000
++++ A3-Antistasi-Greenfork/src/description.ext	2020-03-28 14:57:17.390538822 +0000
+@@ -1,8 +1,11 @@
+ #include "defines.hpp"
+ #include "dialogs.hpp"
+ 
++__EXEC(upstreamVersion = "1.5.0");
++__EXEC(downstreamVersion = "2020-03-01");
++
+ author="Barbolani";
+-OnLoadName = "Antistasi Altis";
++OnLoadName = __EVAL(format ["Antistasi Altis %1 Greenfork %2", upstreamVersion, downstreamVersion]);
+ OnLoadMission = "Be a Resistance leader, be a hero";
+ loadScreen = "pic.JPG";
+ 
