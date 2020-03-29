@@ -1,0 +1,20 @@
+Index: A3-Antistasi-Greenfork/src/description.ext
+===================================================================
+--- A3-Antistasi-Greenfork.orig/src/description.ext	2020-03-29 14:53:49.657207743 +0000
++++ A3-Antistasi-Greenfork/src/description.ext	2020-03-29 14:55:04.785557343 +0000
+@@ -5,1 +5,1 @@
+-__EXEC(downstreamVersion = "2020-03-28");
++__EXEC(downstreamVersion = "2020-03-29");
+@@ -156,9 +156,9 @@
+     class civTraffic
+     {
+         title = "Rate of Civ Traffic";
+-        values[] = {0.5,1,3};
+-        texts[] = {"Low","Medium","JAM"};
+-        default = 1;
++        values[] = {0.2,0.5,1,3};
++        texts[] = {"Very low","Low","Medium","JAM"};
++        default = 0.2;
+         //file = "setViewDistance.sqf"; // (Optional) Script [[call]]ed when player joins, selected value is passed as an argument
+     };
+     class memberSlots
