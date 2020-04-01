@@ -1,0 +1,39 @@
+Index: A3-Antistasi-Greenfork/src/description.ext
+===================================================================
+--- A3-Antistasi-Greenfork.orig/src/description.ext	2020-04-03 03:52:54.606586315 +0000
++++ A3-Antistasi-Greenfork/src/description.ext	2020-04-03 03:54:20.899131366 +0000
+@@ -2,7 +2,7 @@
+ #include "dialogs.hpp"
+ 
+ __EXEC(upstreamVersion = "1.5.0");
+-__EXEC(downstreamVersion = "2020-03-28");
++__EXEC(downstreamVersion = "2020-04-01");
+ 
+ author="Barbolani";
+ OnLoadName = __EVAL(format ["Antistasi Altis %1 Greenfork %2", upstreamVersion, downstreamVersion]);
+@@ -156,9 +156,9 @@
+     class civTraffic
+     {
+         title = "Rate of Civ Traffic";
+-        values[] = {0.5,1,3};
+-        texts[] = {"Low","Medium","JAM"};
+-        default = 1;
++        values[] = {2,3,4,12};
++        texts[] = {"Low","Medium","High","JAM"};
++        default = 3;
+         //file = "setViewDistance.sqf"; // (Optional) Script [[call]]ed when player joins, selected value is passed as an argument
+     };
+     class memberSlots
+Index: A3-Antistasi-Greenfork/src/initServer.sqf
+===================================================================
+--- A3-Antistasi-Greenfork.orig/src/initServer.sqf	2020-04-03 03:40:09.606592569 +0000
++++ A3-Antistasi-Greenfork/src/initServer.sqf	2020-04-03 03:54:44.924004625 +0000
+@@ -26,7 +26,7 @@
+ pvpEnabled = if (paramsArray select 7 == 1) then {true} else {false};
+ skillMult = paramsArray select 9; publicVariable "skillMult";
+ minWeaps = paramsArray select 10; publicVariable "minWeaps";
+-civTraffic = paramsArray select 11; publicVariable "civTraffic";
++civTraffic = (paramsArray select 11) / 4; publicVariable "civTraffic";
+ memberDistance = paramsArray select 13; publicVariable "memberDistance";
+ limitedFT = if (paramsArray select 14 == 1) then {true} else {false}; publicVariable "limitedFT";
+ _nul = call compile preprocessFileLineNumbers "initVar.sqf";
