@@ -1,0 +1,167 @@
+Index: A3-Antistasi-Greenfork/src/dialogs.hpp
+===================================================================
+--- A3-Antistasi-Greenfork.orig/src/dialogs.hpp	2020-04-03 04:27:09.451820784 +0000
++++ A3-Antistasi-Greenfork/src/dialogs.hpp	2020-04-03 04:27:11.689808950 +0000
+@@ -1819,12 +1819,12 @@
+ 		class 8slots_L4: RscButton
+ 		{
+ 			idc = -1;
+-			text = "Resign / Eligible"; //--- ToDo: Localize;
++			text = "Assume Command"; //--- ToDo: Localize;
+ 			x = 0.272481 * safezoneW + safezoneX;
+ 			y = 0.612025 * safezoneH + safezoneY;
+ 			w = 0.175015 * safezoneW;
+ 			h = 0.0560125 * safezoneH;
+-			tooltip = "Step down from commander or toggle eligibility";
++			tooltip = "Promote self to commander";
+ 			action = "if (isMultiplayer) then {closedialog 0;execVM ""orgPlayers\commResign.sqf""} else {hint ""This feature is MP Only""};";
+ 		};
+ 		class 8slots_R4: RscButton
+Index: A3-Antistasi-Greenfork/src/orgPlayers/commResign.sqf
+===================================================================
+--- A3-Antistasi-Greenfork.orig/src/orgPlayers/commResign.sqf	2020-04-03 04:27:09.451820784 +0000
++++ A3-Antistasi-Greenfork/src/orgPlayers/commResign.sqf	2020-04-03 04:27:11.689808950 +0000
+@@ -1,21 +1,10 @@
+ _jugador = player getVariable ["owner",player];
+ 
+-if (_jugador getVariable ["elegible",true]) then
+-	{
+-	_jugador setVariable ["elegible",false,true];
+-	if (_jugador == theBoss) then
+-		{
+-		hint "You resign of being Commander. Other will take the command if there is someone suitable for it.";
+-		sleep 3;
+-		[] remoteExec ["A3A_fnc_assigntheBoss",2];
+-		}
+-	else
+-		{
+-		hint "You decided not to be elegible for Commander.";
+-		};
+-	}
+-else
+-	{
+-	hint "You are now elegible to be Commander of our forces.";
+-	_jugador setVariable ["elegible",true,true];
+-	};
+\ No newline at end of file
++if (_jugador == theBoss) then {
++  hint "You are already in command!";
++}
++else {
++  hint "You are assuming command of the forces.";
++  sleep 3;
++  [_jugador] remoteExec ["A3A_fnc_assigntheBoss",2];
++};
+Index: A3-Antistasi-Greenfork/src/description.ext
+===================================================================
+--- A3-Antistasi-Greenfork.orig/src/description.ext	2020-04-03 04:27:11.663809088 +0000
++++ A3-Antistasi-Greenfork/src/description.ext	2020-04-03 04:27:11.690808945 +0000
+@@ -2,7 +2,7 @@
+ #include "dialogs.hpp"
+ 
+ __EXEC(upstreamVersion = "1.5.0");
+-__EXEC(downstreamVersion = "2020-04-01");
++__EXEC(downstreamVersion = "2020-04-03");
+ 
+ author="Barbolani";
+ OnLoadName = __EVAL(format ["Antistasi Altis %1 Greenfork %2", upstreamVersion, downstreamVersion]);
+Index: A3-Antistasi-Greenfork/src/orgPlayers/assignStavros.sqf
+===================================================================
+--- A3-Antistasi-Greenfork.orig/src/orgPlayers/assignStavros.sqf	2020-04-03 04:23:52.590861195 +0000
++++ A3-Antistasi-Greenfork/src/orgPlayers/assignStavros.sqf	2020-04-03 04:34:18.309230338 +0000
+@@ -1,4 +1,4 @@
+-private ["_puntMax","_texto","_multiplicador","_newRank","_selectable","_disconnected","_owner","_puntos","_datos"];
++private ["_puntMax","_texto","_multiplicador","_newRank","_selectable","_disconnected","_owner","_puntos","_datos", "_jugador"];
+ _puntMax = 0;
+ _texto = "";
+ _multiplicador = 1;
+@@ -11,30 +11,29 @@
+ 
+ _lider = objNull;
+ 
+-{
+-_jugadores pushBack (_x getVariable ["owner",_x]);
+-if (_x != _x getVariable ["owner",_x]) then {waitUntil {_x == _x getVariable ["owner",_x]}};
+-if ([_x] call A3A_fnc_isMember) then
+-	{
+-	_miembros pushBack _x;
+-	if (_x getVariable ["elegible",true]) then
+-		{
+-		_elegibles pushBack _x;
+-		if (_x == theBoss) then
+-			{
+-			_lider = _x;
+-			_datos = [_lider] call A3A_fnc_numericRank;
+-			_puntMax = _datos select 0;
+-			};
+-		};
+-	};
+-} forEach (playableUnits select {(side (group _x) == buenos)});
++_jugador = _this select 0;
++
++
++if (not ([_jugador] call A3A_fnc_isMember)) then {
++	_texto = format ["Could not promote %1 to Commander: Not a server member", name _jugador];
++	[[petros,"hint",_texto],"A3A_fnc_commsMP"] call BIS_fnc_MP;
++};
++
++if (side (group _jugador) != buenos) then {
++	_texto = format ["Could not promote %1 to Commander: Not a faction member", name _jugador];
++	[[petros,"hint",_texto],"A3A_fnc_commsMP"] call BIS_fnc_MP;
++};
++
++
++if (([_jugador] call A3A_fnc_isMember) and (side (group _jugador) == buenos)) then {
++	_texto = format ["Player %1 has been promoted to Commander.", name _jugador];
++	_lider = _jugador;
++	[_jugador] call A3A_fnc_theBossInit;
++	sleep 5;
++	[[petros,"hint",_texto],"A3A_fnc_commsMP"] call BIS_fnc_MP;
++};
++
+ 
+-if (isNull _lider) then
+-	{
+-	_puntMax = 0;
+-	_disconnected = true;
+-	};
+ _texto = "Promoted Players:\n\n";
+ _promoted = false;
+ {
+@@ -63,35 +62,3 @@
+ 	_texto = format ["%1\n\nCONGATULATIONS!!",_texto];
+ 	[petros,"hint",_texto] remoteExec ["A3A_fnc_commsMP"];
+ 	};
+-
+-_proceder = false;
+-
+-if ((isNull _lider) or switchCom) then
+-	{
+-	if (count _miembros > 0) then
+-		{
+-		_proceder = true;
+-		if (count _elegibles == 0) then {_elegibles = _miembros};
+-		};
+-	};
+-
+-if (!_proceder) exitWith {};
+-
+-_selectable = objNull;
+-{
+-_datos = [_x] call A3A_fnc_numericRank;
+-_multiplicador = _datos select 0;
+-if ((_multiplicador > _puntMax) and (_x!=_lider)) then
+-	{
+-	_selectable = _x;
+-	_puntMax = _multiplicador;
+-	};
+-} forEach _elegibles;
+-
+-if (!isNull _selectable) then
+-	{
+-	if (_disconnected) then {_texto = format ["Player Commander disconnected or renounced. %1 is our new leader. Greet him!", name _selectable]} else {_texto = format ["%1 is no longer leader of the our Forces.\n\n %2 is our new leader. Greet him!", name theBoss, name _selectable]};
+-	[_selectable] call A3A_fnc_theBossInit;
+-	sleep 5;
+-	[[petros,"hint",_texto],"A3A_fnc_commsMP"] call BIS_fnc_MP;
+-	};
+\ No newline at end of file
