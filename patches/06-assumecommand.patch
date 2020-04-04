@@ -52,19 +52,6 @@ Index: A3-Antistasi-Greenfork/src/orgPlayers/commResign.sqf
 +  sleep 3;
 +  [_jugador] remoteExec ["A3A_fnc_assigntheBoss",2];
 +};
-Index: A3-Antistasi-Greenfork/src/description.ext
-===================================================================
---- A3-Antistasi-Greenfork.orig/src/description.ext	2020-04-03 04:27:11.663809088 +0000
-+++ A3-Antistasi-Greenfork/src/description.ext	2020-04-03 04:27:11.690808945 +0000
-@@ -2,7 +2,7 @@
- #include "dialogs.hpp"
- 
- __EXEC(upstreamVersion = "1.5.0");
--__EXEC(downstreamVersion = "2020-04-01");
-+__EXEC(downstreamVersion = "2020-04-03");
- 
- author="Barbolani";
- OnLoadName = __EVAL(format ["Antistasi Altis %1 Greenfork %2", upstreamVersion, downstreamVersion]);
 Index: A3-Antistasi-Greenfork/src/orgPlayers/assignStavros.sqf
 ===================================================================
 --- A3-Antistasi-Greenfork.orig/src/orgPlayers/assignStavros.sqf	2020-04-03 04:23:52.590861195 +0000
