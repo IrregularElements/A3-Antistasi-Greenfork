@@ -2,11 +2,11 @@ Index: A3-Antistasi-Greenfork/src/healandrepair.sqf
 ===================================================================
 --- A3-Antistasi-Greenfork.orig/src/healandrepair.sqf	2020-03-28 13:20:49.317712663 +0000
 +++ A3-Antistasi-Greenfork/src/healandrepair.sqf	2020-03-28 15:56:50.943256626 +0000
-@@ -6,7 +6,7 @@
+@@ -6,7 +6,8 @@
  	{
  	if (hayACEMedical) then
  		{
--		[_x, _x] call ace_medical_fnc_treatmentAdvanced_fullHeal;
+ 		[_x, _x] call ace_medical_fnc_treatmentAdvanced_fullHeal;
 +		[_x] call ace_medical_treatment_fnc_fullHealLocal;
  		}
  	else
