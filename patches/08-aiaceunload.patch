@@ -1,0 +1,159 @@
+Index: A3-Antistasi-Greenfork/src/functions.hpp
+===================================================================
+--- A3-Antistasi-Greenfork.orig/src/functions.hpp	2020-04-07 22:50:40.767276792 +0000
++++ A3-Antistasi-Greenfork/src/functions.hpp	2020-04-07 22:51:51.254066024 +0000
+@@ -251,4 +251,10 @@
+         class isMedic {file="Revive\isMedic.sqf";};
+         class respawn {file="Revive\respawn.sqf";};
+ 	}
+-}
+\ No newline at end of file
++
++	class User
++	{
++        class refreshCargoActions {file="refreshCargoActions.sqf"};
++        class getDisplayName {file="getDisplayName.sqf"};
++	}
++}
+Index: A3-Antistasi-Greenfork/src/getDisplayName.sqf
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ A3-Antistasi-Greenfork/src/getDisplayName.sqf	2020-04-07 22:53:16.994809644 +0000
+@@ -0,0 +1,9 @@
++params ["_o"];
++
++private _class = _o;
++
++if (typeName _o != "STRING") then {
++	_class = typeOf _o;
++};
++
++getText (configFile >> "CfgVehicles" >> _class >> "displayName")
+Index: A3-Antistasi-Greenfork/src/initPlayerLocal.sqf
+===================================================================
+--- A3-Antistasi-Greenfork.orig/src/initPlayerLocal.sqf	2020-04-07 22:47:47.777794048 +0000
++++ A3-Antistasi-Greenfork/src/initPlayerLocal.sqf	2020-04-07 22:52:48.279895507 +0000
+@@ -646,8 +646,16 @@
+ petros disableAI "AUTOTARGET";
+ petros addAction ["Mission Request", {nul=CreateDialog "mission_menu";},nil,0,false,true,"","_this == theBoss"];
+ 
++["itemAdd", ["A3A_ACECargoPlayerInit", {
++	[] spawn {
++		{
++			[_x] call A3A_fnc_refreshCargoActions;
++		} forEach ((units player) - [player]);
++	};
++}, 15]] call BIS_fnc_loop;
++
+ disableSerialization;
+ //1 cutRsc ["H8erHUD","PLAIN",0,false];
+ _layer = ["estadisticas"] call bis_fnc_rscLayer;
+ _layer cutRsc ["H8erHUD","PLAIN",0,false];
+-[] spawn A3A_fnc_statistics;
+\ No newline at end of file
++[] spawn A3A_fnc_statistics;
+Index: A3-Antistasi-Greenfork/src/refreshCargoActions.sqf
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ A3-Antistasi-Greenfork/src/refreshCargoActions.sqf	2020-04-07 22:53:54.016698945 +0000
+@@ -0,0 +1,57 @@
++params ["_unit", ["_distance", 50]];
++
++if (_unit == objNull) exitWith {
++	diag_log format ["refreshCargoActions: _unit is null"];
++	-1
++};
++
++private _cargoActions = _unit getVariable ["A3A_ACECargoActions", []];
++
++{
++	private _actionId = _x select 0;
++	private _item     = _x select 1;
++	private _vehicle  = _x select 2;
++	_unit removeAction _actionId;
++} forEach _cargoActions;
++
++_cargoActions = [];
++
++private _checkedVehicles = nearestObjects [_unit, ["LandVehicle", "Helicopter"], _distance];
++
++private _newActionCount = 0;
++
++{
++	private _vehicle = _x;
++	private _cargoItems = _vehicle getVariable ["ACE_cargo_loaded", []];
++
++	{
++		private _item = _x;
++
++		private _vehName = [_vehicle] call A3A_fnc_getDisplayName;
++		private _itemName = [_item] call A3A_fnc_getDisplayName;
++
++		private _actionId = _unit addAction [
++			(format ["Unload %1 from %2", _itemName, _vehName]),
++			"unloadCargoAction.sqf", // code
++			[_item, _vehicle],
++			2,
++			false,
++			true,
++			"",
++			"true",
++			0
++		];
++
++		if(_actionId < 0) exitWith {
++			diag_log format ["refreshCargoActions: failed addAction for _unit=%1, _item=%2, _vehicle=%3", _unit, _item, _vehicle];
++		};
++
++		_newActionCount = _newActionCount + 1;
++
++		_cargoActions = [_cargoActions, [[_actionId, _item, _vehicle]], 0] call BIS_fnc_arrayInsert;
++	} forEach _cargoItems;
++} forEach _checkedVehicles;
++
++_unit setVariable ["A3A_ACECargoActions", _cargoActions];
++
++_newActionCount
+Index: A3-Antistasi-Greenfork/src/unloadCargoAction.sqf
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ A3-Antistasi-Greenfork/src/unloadCargoAction.sqf	2020-04-07 22:54:13.994639206 +0000
+@@ -0,0 +1,38 @@
++params ["_target", "_caller", "_actionId", "_arguments"];
++_arguments params ["_item", "_vehicle", ["_radius", 100]];
++
++private _distance = _target distance _vehicle;
++private _vehName = [_vehicle] call A3A_fnc_getDisplayName;
++private _itemName = [_item] call A3A_fnc_getDisplayName;
++
++if (_distance > _radius) exitWith {
++	diag_log format ["unloadCargoAction: too far away from vehicle: actual distance is %1, maximum radius is %2", _distance, _radius];
++	_target groupChat format ["Cannot unload %1 from %2, too far away!", _itemName, _vehName];
++	[_target] call A3A_fnc_refreshCargoActions;
++	false
++};
++
++_target disableAI "RADIOPROTOCOL";
++_target doMove position _vehicle;
++
++waitUntil {
++	sleep 0.5;
++	_distance = _target distance _vehicle;
++	_distance < 8
++};
++
++_target disableAI "MOVE";
++
++private _unloadResult = [_item, _vehicle] call ace_cargo_fnc_unloadItem;
++
++if (not _unloadResult) then {
++	_target groupChat format ["Could not unload %1 from %2!", _itemName, _vehName];
++	diag_log format ["unloadCargoAction: ace_cargo_fnc_unloadItem failed: %1 %2 %3", _target, _item, _vehicle];
++};
++
++[_target] call A3A_fnc_refreshCargoActions;
++
++_target enableAI "MOVE";
++_target enableAI "RADIOPROTOCOL";
++
++_unloadResult
