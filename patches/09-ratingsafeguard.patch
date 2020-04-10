@@ -1,0 +1,25 @@
+Index: A3-Antistasi-Greenfork/src/initPlayerLocal.sqf
+===================================================================
+--- A3-Antistasi-Greenfork.orig/src/initPlayerLocal.sqf	2020-04-10 10:51:26.719347704 +0000
++++ A3-Antistasi-Greenfork/src/initPlayerLocal.sqf	2020-04-10 11:00:00.419582077 +0000
+@@ -321,6 +321,20 @@
+ 	_control
+ 	}];
+ */
++
++player addEventHandler ["HandleRating", {
++	params ["_unit", "_rating"];
++
++	private _newrating = _rating;
++
++	if (_newrating < 0 and ((isPlayer _unit) or (side _unit == resistance))) then {
++		diag_log format ["HandleRating hotfix: unit %1 has negative rating %2, capping", _unit, _rating];
++		_newrating = 0;
++	};
++
++	_newrating;
++}];
++
+ player addEventHandler ["HandleHeal",
+ 	{
+ 	_player = _this select 0;
