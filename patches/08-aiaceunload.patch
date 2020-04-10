@@ -59,7 +59,7 @@ Index: A3-Antistasi-Greenfork/src/refreshCargoActions.sqf
 @@ -0,0 +1,57 @@
 +params ["_unit", ["_distance", 50]];
 +
-+if (_unit == objNull) exitWith {
++if (isNull _unit) exitWith {
 +	diag_log format ["refreshCargoActions: _unit is null"];
 +	-1
 +};
