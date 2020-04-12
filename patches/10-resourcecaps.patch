@@ -1,0 +1,64 @@
+Index: A3-Antistasi-Greenfork/src/resourcesFIA.sqf
+===================================================================
+--- A3-Antistasi-Greenfork.orig/src/resourcesFIA.sqf	2020-04-12 14:10:59.704966982 +0000
++++ A3-Antistasi-Greenfork/src/resourcesFIA.sqf	2020-04-13 00:56:35.103164132 +0000
+@@ -1,4 +1,4 @@
+-private ["_hr","_resourcesFIA","_hrT","_resourcesFIAT"];
++private ["_hr","_resourcesFIA","_hrT","_resourcesFIAT", "_popFIA", "_hrCap", "_cashCap"];
+ waitUntil {!resourcesIsChanging};
+ resourcesIsChanging = true;
+ _hr = _this select 0;
+@@ -9,8 +9,51 @@
+ _hrT = server getVariable "hr";
+ _resourcesFIAT = server getVariable "resourcesFIA";
+ 
+-_hrT = _hrT + _hr;
+-_resourcesFIAT = round (_resourcesFIAT + _resourcesFIA);
++_popFIA = 0;
++{
++	private _data = server getVariable _x;
++	private _population = _data select 0;
++	private _prestige = _data select 3;
++	_popFIA = _popFIA + round (_population * (_prestige / 100));
++} forEach ciudades;
++_hrCap = (round (_popFIA / 10)) max 10;
++_cashCap = (_popFIA * 10) max 10000;
++diag_log format ["Resource caps: pop=%1 HR=%2 cash=%3", _popFIA, _hrCap, _cashCap];
++
++if(_hrT + _hr < _hrCap) then {
++	private _newHr = _hrT + _hr;
++	diag_log format ["Resource caps: HR: not capping %1 -> %2", _hrT, _newHr];
++	_hrT = _newHr;
++} else {
++	private _difference = _hrT + _hr - _hrCap;
++
++	if(_difference > 25) then {
++		private _newHr = round ((_hrT + _hr + _hrCap) / 2);
++		diag_log format ["Resource caps: HR: drain down %1 -> %2", _hrT, _newHr];
++		_hrT = _newHr;
++	} else {
++		diag_log format ["Resource caps: HR: cap %1 -> %2", _hrT, _hrCap];
++		_hrT = _hrCap;
++	};
++};
++
++if(_resourcesFIAT + _resourcesFIA < _cashCap) then {
++	private _newCash = round (_resourcesFIAT + _resourcesFIA);
++	diag_log format ["Resource caps: Cash: not capping %1 -> %2", _resourcesFIAT, _newCash];
++	_resourcesFIAT = _newCash;
++} else {
++	private _difference = _resourcesFIAT + _resourcesFIA - _cashCap;
++
++	if(_difference > 25000) then {
++		private _newCash = round ((_resourcesFIAT + _resourcesFIA + _cashCap) / 2);
++		diag_log format ["Resource caps: Cash: drain down %1 -> %2", _resourcesFIAT, _newCash];
++		_resourcesFIAT = _newCash;
++	} else {
++		diag_log format ["Resource caps: Cash: cap %1 -> %2", _resourcesFIAT, _cashCap];
++		_resourcesFIAT = _cashCap;
++	};
++};
++
+ 
+ if (_hrT < 0) then {_hrT = 0};
+ if (_resourcesFIAT < 0) then {_resourcesFIAT = 0};
