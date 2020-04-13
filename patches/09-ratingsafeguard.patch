@@ -13,7 +13,7 @@ Index: A3-Antistasi-Greenfork/src/initPlayerLocal.sqf
 +	private _newrating = _rating;
 +
 +	if (_newrating < 0 and ((isPlayer _unit) or (side _unit == resistance))) then {
-+		diag_log format ["HandleRating hotfix: unit %1 has negative rating %2, capping", _unit, _rating];
++		diag_log format ["Greenfork: HandleRating hotfix: unit %1 has negative rating %2, capping", _unit, _rating];
 +		_newrating = 0;
 +	};
 +

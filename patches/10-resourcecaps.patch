@@ -23,38 +23,38 @@ Index: A3-Antistasi-Greenfork/src/resourcesFIA.sqf
 +} forEach ciudades;
 +_hrCap = (round (_popFIA / 10)) max 10;
 +_cashCap = (_popFIA * 10) max 10000;
-+diag_log format ["Resource caps: pop=%1 HR=%2 cash=%3", _popFIA, _hrCap, _cashCap];
++diag_log format ["Greenfork: Resource caps: pop=%1 HR=%2 cash=%3", _popFIA, _hrCap, _cashCap];
 +
 +if(_hrT + _hr < _hrCap) then {
 +	private _newHr = _hrT + _hr;
-+	diag_log format ["Resource caps: HR: not capping %1 -> %2", _hrT, _newHr];
++	diag_log format ["Greenfork: Resource caps: HR: not capping %1 -> %2", _hrT, _newHr];
 +	_hrT = _newHr;
 +} else {
 +	private _difference = _hrT + _hr - _hrCap;
 +
 +	if(_difference > 25) then {
 +		private _newHr = round ((_hrT + _hr + _hrCap) / 2);
-+		diag_log format ["Resource caps: HR: drain down %1 -> %2", _hrT, _newHr];
++		diag_log format ["Greenfork: Resource caps: HR: drain down %1 -> %2", _hrT, _newHr];
 +		_hrT = _newHr;
 +	} else {
-+		diag_log format ["Resource caps: HR: cap %1 -> %2", _hrT, _hrCap];
++		diag_log format ["Greenfork: Resource caps: HR: cap %1 -> %2", _hrT, _hrCap];
 +		_hrT = _hrCap;
 +	};
 +};
 +
 +if(_resourcesFIAT + _resourcesFIA < _cashCap) then {
 +	private _newCash = round (_resourcesFIAT + _resourcesFIA);
-+	diag_log format ["Resource caps: Cash: not capping %1 -> %2", _resourcesFIAT, _newCash];
++	diag_log format ["Greenfork: Resource caps: Cash: not capping %1 -> %2", _resourcesFIAT, _newCash];
 +	_resourcesFIAT = _newCash;
 +} else {
 +	private _difference = _resourcesFIAT + _resourcesFIA - _cashCap;
 +
 +	if(_difference > 25000) then {
 +		private _newCash = round ((_resourcesFIAT + _resourcesFIA + _cashCap) / 2);
-+		diag_log format ["Resource caps: Cash: drain down %1 -> %2", _resourcesFIAT, _newCash];
++		diag_log format ["Greenfork: Resource caps: Cash: drain down %1 -> %2", _resourcesFIAT, _newCash];
 +		_resourcesFIAT = _newCash;
 +	} else {
-+		diag_log format ["Resource caps: Cash: cap %1 -> %2", _resourcesFIAT, _cashCap];
++		diag_log format ["Greenfork: Resource caps: Cash: cap %1 -> %2", _resourcesFIAT, _cashCap];
 +		_resourcesFIAT = _cashCap;
 +	};
 +};

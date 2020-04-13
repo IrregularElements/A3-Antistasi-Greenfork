@@ -60,7 +60,7 @@ Index: A3-Antistasi-Greenfork/src/refreshCargoActions.sqf
 +params ["_unit", ["_distance", 50]];
 +
 +if (isNull _unit) exitWith {
-+	diag_log format ["refreshCargoActions: _unit is null"];
++	diag_log format ["Greenfork: refreshCargoActions: _unit is null"];
 +	-1
 +};
 +
@@ -102,7 +102,7 @@ Index: A3-Antistasi-Greenfork/src/refreshCargoActions.sqf
 +		];
 +
 +		if(_actionId < 0) exitWith {
-+			diag_log format ["refreshCargoActions: failed addAction for _unit=%1, _item=%2, _vehicle=%3", _unit, _item, _vehicle];
++			diag_log format ["Greenfork: refreshCargoActions: failed addAction for _unit=%1, _item=%2, _vehicle=%3", _unit, _item, _vehicle];
 +		};
 +
 +		_newActionCount = _newActionCount + 1;
@@ -127,7 +127,7 @@ Index: A3-Antistasi-Greenfork/src/unloadCargoAction.sqf
 +private _itemName = [_item] call A3A_fnc_getDisplayName;
 +
 +if (_distance > _radius) exitWith {
-+	diag_log format ["unloadCargoAction: too far away from vehicle: actual distance is %1, maximum radius is %2", _distance, _radius];
++	diag_log format ["Greenfork: unloadCargoAction: too far away from vehicle: actual distance is %1, maximum radius is %2", _distance, _radius];
 +	_target groupChat format ["Cannot unload %1 from %2, too far away!", _itemName, _vehName];
 +	[_target] call A3A_fnc_refreshCargoActions;
 +	false
@@ -148,7 +148,7 @@ Index: A3-Antistasi-Greenfork/src/unloadCargoAction.sqf
 +
 +if (not _unloadResult) then {
 +	_target groupChat format ["Could not unload %1 from %2!", _itemName, _vehName];
-+	diag_log format ["unloadCargoAction: ace_cargo_fnc_unloadItem failed: %1 %2 %3", _target, _item, _vehicle];
++	diag_log format ["Greenfork: unloadCargoAction: ace_cargo_fnc_unloadItem failed: %1 %2 %3", _target, _item, _vehicle];
 +};
 +
 +[_target] call A3A_fnc_refreshCargoActions;
