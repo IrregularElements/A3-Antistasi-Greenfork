@@ -1,19 +1,49 @@
-Index: A3-Antistasi-Greenfork/src/resourcesFIA.sqf
+Index: A3-Antistasi-Greenfork/src/resourcecheck.sqf
 ===================================================================
---- A3-Antistasi-Greenfork.orig/src/resourcesFIA.sqf	2020-04-12 14:10:59.704966982 +0000
-+++ A3-Antistasi-Greenfork/src/resourcesFIA.sqf	2020-04-13 00:56:35.103164132 +0000
-@@ -1,4 +1,4 @@
--private ["_hr","_resourcesFIA","_hrT","_resourcesFIAT"];
-+private ["_hr","_resourcesFIA","_hrT","_resourcesFIAT", "_popFIA", "_hrCap", "_cashCap"];
- waitUntil {!resourcesIsChanging};
- resourcesIsChanging = true;
- _hr = _this select 0;
-@@ -9,8 +9,51 @@
- _hrT = server getVariable "hr";
- _resourcesFIAT = server getVariable "resourcesFIA";
- 
--_hrT = _hrT + _hr;
--_resourcesFIAT = round (_resourcesFIAT + _resourcesFIA);
+--- A3-Antistasi-Greenfork.orig/src/resourcecheck.sqf	2020-04-14 19:34:07.419546953 +0000
++++ A3-Antistasi-Greenfork/src/resourcecheck.sqf	2020-04-14 19:37:02.789704451 +0000
+@@ -113,10 +113,12 @@
+ 	_updated = [] call A3A_fnc_arsenalManage;
+ 	if (_updated != "") then {_texto = format ["%1<br/>Arsenal Updated<br/><br/>%2",_texto,_updated]};
+ 	[petros,"taxRep",_texto] remoteExec ["A3A_fnc_commsMP",[buenos,civilian]];
+-	_hrAddBLUFOR = _hrAddBLUFOR + (server getVariable "hr");
+-	_recAddSDK = _recAddSDK + (server getVariable "resourcesFIA");
+-	server setVariable ["hr",_hrAddBLUFOR,true];
+-	server setVariable ["resourcesFIA",_recAddSDK,true];
++
++	if((time + 45) > nextIncome) then {
++		[_hrAddBLUFOR, _recAddSDK] call A3A_fnc_resourceTaxes;
++		nextIncome = time + incomeTick;
++	};
++
+ 	bombRuns = bombRuns + (({lados getVariable [_x,sideUnknown] == buenos} count aeropuertos) * 0.25);
+ 	[petros,"taxRep",_texto] remoteExec ["A3A_fnc_commsMP",[buenos,civilian]];
+ 	[] call A3A_fnc_economicsAI;
+Index: A3-Antistasi-Greenfork/src/functions.hpp
+===================================================================
+--- A3-Antistasi-Greenfork.orig/src/functions.hpp	2020-04-14 22:21:48.493360907 +0000
++++ A3-Antistasi-Greenfork/src/functions.hpp	2020-04-14 22:21:48.526360748 +0000
+@@ -256,5 +256,6 @@
+ 	{
+         class refreshCargoActions {file="refreshCargoActions.sqf"};
+         class getDisplayName {file="getDisplayName.sqf"};
++        class resourceTaxes {file="resourceTaxes.sqf"};
+ 	}
+ }
+Index: A3-Antistasi-Greenfork/src/resourceTaxes.sqf
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ A3-Antistasi-Greenfork/src/resourceTaxes.sqf	2020-04-14 19:31:35.431277130 +0000
+@@ -0,0 +1,60 @@
++private ["_hr","_resourcesFIA", "_popFIA", "_hrCap", "_cashCap"];
++params ["_hrDelta", "_cashDelta"];
++
++if ((isNil "_hrDelta") or (isNil "_cashDelta")) exitWith {};
++if ((floor _hrDelta == 0) and (floor _cashDelta == 0)) exitWith {};
++
++_hr = server getVariable "hr";
++_resourcesFIA = server getVariable "resourcesFIA";
++
 +_popFIA = 0;
 +{
 +	private _data = server getVariable _x;
@@ -23,42 +53,119 @@ Index: A3-Antistasi-Greenfork/src/resourcesFIA.sqf
 +} forEach ciudades;
 +_hrCap = (round (_popFIA / 10)) max 10;
 +_cashCap = (_popFIA * 10) max 10000;
-+diag_log format ["Greenfork: Resource caps: pop=%1 HR=%2 cash=%3", _popFIA, _hrCap, _cashCap];
++diag_log format ["Greenfork: Caps: pop=%1 HR=%2 cash=%3", _popFIA, _hrCap, _cashCap];
 +
-+if(_hrT + _hr < _hrCap) then {
-+	private _newHr = _hrT + _hr;
-+	diag_log format ["Greenfork: Resource caps: HR: not capping %1 -> %2", _hrT, _newHr];
-+	_hrT = _newHr;
++if(_hr + _hrDelta < _hrCap) then {
++	private _newHr = _hr + _hrDelta;
++	diag_log format ["Greenfork: Caps: HR: not capping %1 -> %2", _hr, _newHr];
++	_hr = _newHr;
 +} else {
-+	private _difference = _hrT + _hr - _hrCap;
++	private _difference = _hr + _hrDelta - _hrCap;
 +
-+	if(_difference > 25) then {
-+		private _newHr = round ((_hrT + _hr + _hrCap) / 2);
-+		diag_log format ["Greenfork: Resource caps: HR: drain down %1 -> %2", _hrT, _newHr];
-+		_hrT = _newHr;
++	if(_difference > 5) then {
++		private _newHr = round ((_hr + _hrCap) / 2);
++		diag_log format ["Greenfork: Caps: HR: drain down %1 -> %2", _hr, _newHr];
++		_hr = _newHr;
 +	} else {
-+		diag_log format ["Greenfork: Resource caps: HR: cap %1 -> %2", _hrT, _hrCap];
-+		_hrT = _hrCap;
++		diag_log format ["Greenfork: Caps: HR: cap %1 -> %2", _hr, _hrCap];
++		_hr = _hrCap;
 +	};
 +};
 +
-+if(_resourcesFIAT + _resourcesFIA < _cashCap) then {
-+	private _newCash = round (_resourcesFIAT + _resourcesFIA);
-+	diag_log format ["Greenfork: Resource caps: Cash: not capping %1 -> %2", _resourcesFIAT, _newCash];
-+	_resourcesFIAT = _newCash;
++if(_resourcesFIA + _cashDelta < _cashCap) then {
++	private _newCash = round (_resourcesFIA + _cashDelta);
++	diag_log format ["Greenfork: Caps: Cash: not capping %1 -> %2", _resourcesFIA, _newCash];
++	_resourcesFIA = _newCash;
 +} else {
-+	private _difference = _resourcesFIAT + _resourcesFIA - _cashCap;
++	private _difference = _resourcesFIA + _cashDelta - _cashCap;
 +
-+	if(_difference > 25000) then {
-+		private _newCash = round ((_resourcesFIAT + _resourcesFIA + _cashCap) / 2);
-+		diag_log format ["Greenfork: Resource caps: Cash: drain down %1 -> %2", _resourcesFIAT, _newCash];
-+		_resourcesFIAT = _newCash;
++	if(_difference > 5000) then {
++		private _newCash = round ((_resourcesFIA + _cashCap) / 2);
++		diag_log format ["Greenfork: Caps: Cash: drain down %1 -> %2", _resourcesFIA, _newCash];
++		_resourcesFIA = _newCash;
 +	} else {
-+		diag_log format ["Greenfork: Resource caps: Cash: cap %1 -> %2", _resourcesFIAT, _cashCap];
-+		_resourcesFIAT = _cashCap;
++		diag_log format ["Greenfork: Caps: Cash: cap %1 -> %2", _resourcesFIA, _cashCap];
++		_resourcesFIA = _cashCap;
 +	};
 +};
 +
++
++if (_hr < 0) then {_hr = 0};
++if (_resourcesFIA < 0) then {_resourcesFIA = 0};
++
++server setVariable ["hr", _hr, true];
++server setVariable ["resourcesFIA", _resourcesFIA, true];
+Index: A3-Antistasi-Greenfork/src/description.ext
+===================================================================
+--- A3-Antistasi-Greenfork.orig/src/description.ext	2020-04-14 22:21:48.429361214 +0000
++++ A3-Antistasi-Greenfork/src/description.ext	2020-04-14 22:21:48.526360748 +0000
+@@ -184,6 +184,12 @@
+         texts[] = {"No","Yes"};
+         default = 1;
+     };
++    class minutesPerIncomeTick
++    {
++        title = "Minutes per income period";
++        values[] = {10, 15, 20, 30, 45, 60};
++        default = 20;
++    };
+ };
  
- if (_hrT < 0) then {_hrT = 0};
- if (_resourcesFIAT < 0) then {_resourcesFIAT = 0};
+ class CfgIdentities
+Index: A3-Antistasi-Greenfork/src/initServer.sqf
+===================================================================
+--- A3-Antistasi-Greenfork.orig/src/initServer.sqf	2020-04-14 22:21:48.430361209 +0000
++++ A3-Antistasi-Greenfork/src/initServer.sqf	2020-04-14 22:21:48.527360743 +0000
+@@ -29,6 +29,7 @@
+ civTraffic = (paramsArray select 11) / 4; publicVariable "civTraffic";
+ memberDistance = paramsArray select 13; publicVariable "memberDistance";
+ limitedFT = if (paramsArray select 14 == 1) then {true} else {false}; publicVariable "limitedFT";
++incomeTick = (paramsArray select 15) * 60; publicVariable "incomeTick";
+ _nul = call compile preprocessFileLineNumbers "initVar.sqf";
+ initVar = true; publicVariable "initVar";
+ savingServer = true;
+Index: A3-Antistasi-Greenfork/src/statSave/saveFuncs.sqf
+===================================================================
+--- A3-Antistasi-Greenfork.orig/src/statSave/saveFuncs.sqf	2020-04-07 22:55:01.239497933 +0000
++++ A3-Antistasi-Greenfork/src/statSave/saveFuncs.sqf	2020-04-14 19:26:05.628861550 +0000
+@@ -44,7 +44,7 @@
+ 	"prestigeNATO","prestigeCSAT", "hr","planesAAFcurrent","helisAAFcurrent","APCAAFcurrent","tanksAAFcurrent","armas","items","mochis","municion","fecha", "WitemsPlayer","prestigeOPFOR","prestigeBLUFOR","resourcesAAF","resourcesFIA","skillFIA"];
+ */
+ specialVarLoads =
+-["puestosFIA","minas","estaticas","cuentaCA","antenas","mrkNATO","mrkSDK","prestigeNATO","prestigeCSAT","posHQ", "hr","armas","items","mochis","municion","fecha", "prestigeOPFOR","prestigeBLUFOR","resourcesFIA","skillFIA","distanciaSPWN","civPerc","maxUnits","destroyedCities","garrison","tasks","scorePlayer","rankPlayer","smallCAmrk","dinero","miembros","vehInGarage","destroyedBuildings","personalGarage","idlebases","idleassets","chopForest","weather","killZones","jna_dataList","controlesSDK","loadoutPlayer","mrkCSAT","nextTick","bombRuns","dificultad","gameMode","securedCities"];
++["puestosFIA","minas","estaticas","cuentaCA","antenas","mrkNATO","mrkSDK","prestigeNATO","prestigeCSAT","posHQ", "hr","armas","items","mochis","municion","fecha", "prestigeOPFOR","prestigeBLUFOR","resourcesFIA","skillFIA","distanciaSPWN","civPerc","maxUnits","destroyedCities","garrison","tasks","scorePlayer","rankPlayer","smallCAmrk","dinero","miembros","vehInGarage","destroyedBuildings","personalGarage","idlebases","idleassets","chopForest","weather","killZones","jna_dataList","controlesSDK","loadoutPlayer","mrkCSAT","nextTick","nextIncome","bombRuns","dificultad","gameMode","securedCities"];
+ //THIS FUNCTIONS HANDLES HOW STATS ARE LOADED
+ fn_SetStat =
+ {
+@@ -106,6 +106,7 @@
+ 			};
+ 		if(_varName == 'bombRuns') then {bombRuns = _varValue; publicVariable "bombRuns"};
+ 		if(_varName == 'nextTick') then {nextTick = time + _varValue};
++		if(_varName == 'nextIncome') then {nextIncome = time + _varValue};
+ 		if(_varName == 'miembros') then {miembros = +_varValue; publicVariable "miembros"};
+ 		if(_varName == 'smallCAmrk') then {smallCAmrk = +_varValue};
+ 		if(_varName == 'mrkNATO') then {{lados setVariable [_x,malos,true]} forEach _varValue;};
+Index: A3-Antistasi-Greenfork/src/statSave/loadAccount.sqf
+===================================================================
+--- A3-Antistasi-Greenfork.orig/src/statSave/loadAccount.sqf	2020-04-07 22:55:01.238497937 +0000
++++ A3-Antistasi-Greenfork/src/statSave/loadAccount.sqf	2020-04-14 19:26:25.903764146 +0000
+@@ -174,6 +174,7 @@
+ 	*/
+ 	["posHQ"] call fn_LoadStat;
+ 	["nextTick"] call fn_LoadStat;
++	["nextIncome"] call fn_LoadStat;
+ 	["estaticas"] call fn_LoadStat;//tiene que ser el último para que el sleep del borrado del contenido no haga que despawneen
+ 
+ 
+Index: A3-Antistasi-Greenfork/src/statSave/saveLoop.sqf
+===================================================================
+--- A3-Antistasi-Greenfork.orig/src/statSave/saveLoop.sqf	2020-04-07 22:55:01.240497931 +0000
++++ A3-Antistasi-Greenfork/src/statSave/saveLoop.sqf	2020-04-14 19:26:44.061676913 +0000
+@@ -69,6 +69,7 @@
+ 	["chopForest", chopForest] call fn_SaveStat;
+ 	["maxUnits", maxUnits] call fn_SaveStat;
+ 	["nextTick", nextTick - time] call fn_SaveStat;
++	["nextIncome", nextIncome - time] call fn_SaveStat;
+ 	/*
+ 	["unlockedWeapons", unlockedWeapons] call fn_SaveStat;
+ 	["unlockedItems", unlockedItems] call fn_SaveStat;
