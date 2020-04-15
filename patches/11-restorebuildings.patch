@@ -1,0 +1,346 @@
+Index: A3-Antistasi-Greenfork/src/dialogs.hpp
+===================================================================
+--- A3-Antistasi-Greenfork.orig/src/dialogs.hpp	2020-04-15 10:55:09.534235121 +0000
++++ A3-Antistasi-Greenfork/src/dialogs.hpp	2020-04-15 10:55:09.591234810 +0000
+@@ -136,8 +136,8 @@
+ 			y = 0.514003 * safezoneH + safezoneY;
+ 			w = 0.175015 * safezoneW;
+ 			h = 0.0560125 * safezoneH;
+-			tooltip = "Cost: 5.000 €";
+-			action = "closeDialog 0;if (player == theBoss) then {nul=[] spawn A3A_fnc_rebuildAssets} else {hint ""Only Player Commander has access to this function""};";
++			tooltip = "Rebuild large assets or small buildings";
++			action = "closeDialog 0;_nul = createDialog ""rebuild_assets"";";
+ 		};
+ 		class HQ_button_vehicle: RscButton
+ 		{
+@@ -3109,6 +3109,55 @@
+ 	};
+ };
+ 
++//"Rebuild assets" continuation
++class rebuild_assets 		{
++	idd=-1;
++	movingenable=false;
++
++	class controls {
++		class HQ_box: BOX
++		{
++			idc = -1;
++			text = ""; //--- ToDo: Localize;
++			x = 0.244979 * safezoneW + safezoneX;
++			y = 0.223941 * safezoneH + safezoneY;
++			w = 0.445038 * safezoneW;
++			h = 0.20 * safezoneH;//30
++		};
++		class HQ_frame: RscFrame
++		{
++			idc = -1;
++			text = "What do you want to rebuild?"; //--- ToDo: Localize;
++			x = 0.254979 * safezoneW + safezoneX;
++			y = 0.233941 * safezoneH + safezoneY;
++			w = 0.425038 * safezoneW;
++			h = 0.18 * safezoneH;//28
++		};
++		class HQ_button_Gsquad: RscButton
++		{
++			idc = -1;
++			text = "Consolidation assets"; //--- ToDo: Localize;
++			x = 0.272481 * safezoneW + safezoneX;
++			y = 0.317959 * safezoneH + safezoneY;
++			w = 0.175015 * safezoneW;
++			h = 0.0560125 * safezoneH;
++			tooltip = "Rebuild a factory or a radio tower for 10'000€";
++			action = "closeDialog 0; _nul = [1] spawn A3A_fnc_rebuildAssets;";
++		};
++		class HQ_button_Gstatic: RscButton
++		{
++			idc = -1;
++			text = "Small buildings"; //--- ToDo: Localize;
++			x = 0.482498 * safezoneW + safezoneX;
++			y = 0.317959 * safezoneH + safezoneY;
++			w = 0.175015 * safezoneW;
++			h = 0.0560125 * safezoneH;
++			tooltip = "Rebuild city houses or outpost towers for 1/5k€ per building";
++			action = "closeDialog 0; _nul = [2] spawn A3A_fnc_rebuildAssets;";
++		};
++	};
++};
++
+ class RscTitles {
+ 	class Default {
+        idd = -1;
+Index: A3-Antistasi-Greenfork/src/rebuildAssets.sqf
+===================================================================
+--- A3-Antistasi-Greenfork.orig/src/rebuildAssets.sqf	2020-04-15 10:30:31.062498193 +0000
++++ A3-Antistasi-Greenfork/src/rebuildAssets.sqf	2020-04-15 10:55:46.161034410 +0000
+@@ -1,9 +1,13 @@
+-
+-_resourcesFIA = server getVariable "resourcesFIA";
+-
+-if (_resourcesFIA < 5000) exitWith {hint "You do not have enough money to rebuild any Asset. You need 5.000 €"};
+-
+-_destroyedCities = destroyedCities - ciudades;
++// _this select 0: Type of asset to rebuild:
++//   1 - Factory/radio tower
++//   2 - City house/outpost tower
++
++params [["_type", 1]];
++
++if (player != theBoss) exitWith {
++	hint "Only Commander has access to this function";
++	false;
++};
+ 
+ if (!visibleMap) then {openMap true};
+ posicionTel = [];
+@@ -18,75 +22,147 @@
+ 
+ _posicionTel = posicionTel;
+ 
+-_sitio = [marcadores,_posicionTel] call BIS_fnc_nearestPosition;
++diag_log format ["Greenfork: rebuildAssets[%1]: Position %2", _type, _posicionTel];
+ 
+-if (getMarkerPos _sitio distance _posicionTel > 50) exitWith {hint "You must click near a map marker"};
+ 
+-if ((not(_sitio in _destroyedCities)) and (!(_sitio in puestos))) exitWith {hint "You cannot rebuild that"};
++switch(_type) do {
++	case 1: {
++		private _cash = server getVariable "resourcesFIA";
+ 
+-_salir = false;
+-_antenaMuerta = [];
+-_texto = "That Outpost does not have a destroyed Radio Tower";
+-if (_sitio in puestos) then
+-	{
+-	_antenasMuertas = antenasMuertas select {_x inArea _sitio};
+-	if (count _antenasMuertas > 0) then
+-		{
+-		if (lados getVariable [_sitio, sideUnknown] != buenos) then
+-			{
+-			_salir = true;
+-			_texto = format ["You cannot rebuild a Radio Tower in an Outpost which does not belong to %1",nameBuenos];
+-			}
+-		else
++		if (_cash < 10000) exitWith {
++			hint "You do not have enough money to rebuild any Asset. You need 10000 €";
++		};
++
++		_destroyedCities = destroyedCities - ciudades;
++
++		_sitio = [marcadores,_posicionTel] call BIS_fnc_nearestPosition;
++
++		if (getMarkerPos _sitio distance _posicionTel > 50) exitWith {
++			hint "You must click near a map marker";
++		};
++
++		if ((not(_sitio in _destroyedCities)) and (!(_sitio in puestos))) exitWith {
++			hint "You cannot rebuild that";
++		};
++
++		_salir = false;
++		_antenaMuerta = [];
++		_texto = "That Outpost does not have a destroyed Radio Tower";
++		if (_sitio in puestos) then
+ 			{
+-			_antenaMuerta = _antenasMuertas select 0;
++			_antenasMuertas = antenasMuertas select {_x inArea _sitio};
++			if (count _antenasMuertas > 0) then
++				{
++				if (lados getVariable [_sitio, sideUnknown] != buenos) then
++					{
++					_salir = true;
++					_texto = format ["You cannot rebuild a Radio Tower in an Outpost which does not belong to %1",nameBuenos];
++					}
++				else
++					{
++					_antenaMuerta = _antenasMuertas select 0;
++					};
++				}
++			else
++				{
++				_salir = true
++				};
++			};
++
++		if (_salir) exitWith {hint format ["%1",_texto];};
++
++		if (count _antenaMuerta == 0) then {
++			if(_sitio in ciudades) exitWith {
++				diag_log format ["Greenfork: rebuildAssets[1]: Cannot rebuild a destroyed city"];
++				hint "Cannot rebuild a destroyed city. Sorry :(";
++				false;
+ 			};
+-		}
+-	else
+-		{
+-		_salir = true
++			_nombre = [_sitio] call A3A_fnc_localizar;
++
++			hint format ["%1 Rebuilt"];
++			diag_log format ["Greenfork: rebuildAssets[1]: Resource rebuilt: %1 (%2)", _sitio, _nombre];
++
++			[0,10,_posicionTel] remoteExec ["A3A_fnc_citySupportChange",2];
++			[5,0] remoteExec ["A3A_fnc_prestige",2];
++			destroyedCities = destroyedCities - [_sitio];
++			publicVariable "destroyedCities";
++		} else {
++			hint "Radio Tower rebuilt";
++			diag_log format ["Greenfork: rebuildAssets[1]: Radio tower rebuilt: %1", _antenaMuerta];
++			antenasMuertas = antenasMuertas - [_antenaMuerta]; publicVariable "antenasMuertas";
++			_antena = nearestBuilding _antenaMuerta;
++			if (isMultiplayer) then {[_antena,true] remoteExec ["hideObjectGlobal",2]} else {_antena hideObject true};
++			_antena = createVehicle ["Land_Communication_F", _antenaMuerta, [], 0, "NONE"];
++			antenas pushBack _antena; publicVariable "antenas";
++			{if ([antenas,_x] call BIS_fnc_nearestPosition == _antena) then {[_x,true] spawn A3A_fnc_apagon}} forEach ciudades;
++			_mrkfin = createMarker [format ["Ant%1", count antenas], _antenaMuerta];
++			_mrkfin setMarkerShape "ICON";
++			_mrkfin setMarkerType "loc_Transmitter";
++			_mrkfin setMarkerColor "ColorBlack";
++			_mrkfin setMarkerText "Radio Tower";
++			mrkAntenas pushBack _mrkfin;
++			publicVariable "mrkAntenas";
++			_antena addEventHandler ["Killed", {
++				_antena = _this select 0;
++				{if ([antenas,_x] call BIS_fnc_nearestPosition == _antena) then {[_x,false] spawn A3A_fnc_apagon}} forEach ciudades;
++				_mrk = [mrkAntenas, _antena] call BIS_fnc_nearestPosition;
++				antenas = antenas - [_antena]; antenasmuertas = antenasmuertas + [getPos _antena]; deleteMarker _mrk;
++				["TaskSucceeded",["", "Radio Tower Destroyed"]] remoteExec ["BIS_fnc_showNotification",buenos];
++				["TaskFailed",["", "Radio Tower Destroyed"]] remoteExec ["BIS_fnc_showNotification",malos];
++				publicVariable "antenas"; publicVariable "antenasMuertas";
++			}];
+ 		};
++
++		[0,-10000] remoteExec ["A3A_fnc_resourcesFIA",2];
+ 	};
+ 
+-if (_salir) exitWith {hint format ["%1",_texto]};
++	case 2: {
++		private _closestBuildings = nearestTerrainObjects [_posicionTel, ["House"], 100, true, true] select { !alive _x } select {
++			private _damagedClass = getText (configFile >> "CfgVehicles" >> (typeOf _x) >> "replaceDamaged");
++			_damagedClass != "";
++		};
+ 
+-if (count _antenaMuerta == 0) then
+-	{
+-	_nombre = [_sitio] call A3A_fnc_localizar;
+-
+-	hint format ["%1 Rebuilt"];
+-
+-	[0,10,_posicionTel] remoteExec ["A3A_fnc_citySupportChange",2];
+-	[5,0] remoteExec ["A3A_fnc_prestige",2];
+-	destroyedCities = destroyedCities - [_sitio];
+-	publicVariable "destroyedCities";
+-	}
+-else
+-	{
+-	hint "Radio Tower rebuilt";
+-	antenasMuertas = antenasMuertas - [_antenaMuerta]; publicVariable "antenasMuertas";
+-	_antena = nearestBuilding _antenaMuerta;
+-	if (isMultiplayer) then {[_antena,true] remoteExec ["hideObjectGlobal",2]} else {_antena hideObject true};
+-	_antena = createVehicle ["Land_Communication_F", _antenaMuerta, [], 0, "NONE"];
+-	antenas pushBack _antena; publicVariable "antenas";
+-	{if ([antenas,_x] call BIS_fnc_nearestPosition == _antena) then {[_x,true] spawn A3A_fnc_apagon}} forEach ciudades;
+-	_mrkfin = createMarker [format ["Ant%1", count antenas], _antenaMuerta];
+-	_mrkfin setMarkerShape "ICON";
+-	_mrkfin setMarkerType "loc_Transmitter";
+-	_mrkfin setMarkerColor "ColorBlack";
+-	_mrkfin setMarkerText "Radio Tower";
+-	mrkAntenas pushBack _mrkfin;
+-	publicVariable "mrkAntenas";
+-	_antena addEventHandler ["Killed",
+-		{
+-		_antena = _this select 0;
+-		{if ([antenas,_x] call BIS_fnc_nearestPosition == _antena) then {[_x,false] spawn A3A_fnc_apagon}} forEach ciudades;
+-		_mrk = [mrkAntenas, _antena] call BIS_fnc_nearestPosition;
+-		antenas = antenas - [_antena]; antenasmuertas = antenasmuertas + [getPos _antena]; deleteMarker _mrk;
+-		["TaskSucceeded",["", "Radio Tower Destroyed"]] remoteExec ["BIS_fnc_showNotification",buenos];
+-		["TaskFailed",["", "Radio Tower Destroyed"]] remoteExec ["BIS_fnc_showNotification",malos];
+-		publicVariable "antenas"; publicVariable "antenasMuertas";
+-		}
++		if (count _closestBuildings <= 0) exitWith {
++			diag_log format ["Greenfork: rebuildAssets[2]: No destroyed houses found at %1", _posicionTel];
++			hint "No houses found within 100m of this position.";
++			false;
++		};
++
++		private _building = _closestBuilding select 0;
++		private _isMilitary = [_building] call A3A_fnc_isMilitaryBuilding;
++		private _displayName = [_building] call A3A_fnc_getDisplayName;
++		private _cost = 1000;
++		if (_isMilitary) then {_cost = 5000;};
++
++		private _cash = server getVariable "resourcesFIA";
++
++		if (_cash < _cost) exitWith {
++			diag_log format ["Greenfork: rebuildAssets[2]: Not enough cash for %1 (%2): need %3, have %4", _building, _displayName, _cost, _cash];
++			hint format ["You do not have enough money to rebuild %1. You need %2€", _displayName, _cost];
++			false;
++		};
++
++		[0,-_cost] remoteExec ["A3A_fnc_resourcesFIA",2];
++		diag_log format ["Greenfork: rebuildAssets[2]: Rebuilding %1 (%2) for %3EUR", _building, _displayName, _cost];
++		_building setDamage 0;
++		destroyedBuildings = destroyedBuildings - [getPosATL _building];
++		publicVariable "destroyedBuildings";
++
++		hint composeText [
++			"Building rebuilt!",
++			lineBreak,
++			(format ["%1", _displayName]),
++			lineBreak,
++			(format ["Position: %1", (mapGridPosition _building)]),
++			lineBreak,
++			(format ["Cost: %1", _cost])
+ 		];
+ 	};
+-[0,-5000] remoteExec ["A3A_fnc_resourcesFIA",2];
+\ No newline at end of file
++
++	default {
++		exitWith {
++			diag_log format ["Greenfork: rebuildAssets: invalid _type: %1", _type];
++			false;
++		};
++	};
++};
+Index: A3-Antistasi-Greenfork/src/functions.hpp
+===================================================================
+--- A3-Antistasi-Greenfork.orig/src/functions.hpp	2020-04-15 10:55:09.577234887 +0000
++++ A3-Antistasi-Greenfork/src/functions.hpp	2020-04-15 10:55:09.591234810 +0000
+@@ -257,5 +257,6 @@
+         class refreshCargoActions {file="refreshCargoActions.sqf"};
+         class getDisplayName {file="getDisplayName.sqf"};
+         class resourceTaxes {file="resourceTaxes.sqf"};
++        class isMilitaryBuilding {file="isMilitaryBuilding.sqf"};
+ 	}
+ }
+Index: A3-Antistasi-Greenfork/src/isMilitaryBuilding.sqf
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ A3-Antistasi-Greenfork/src/isMilitaryBuilding.sqf	2020-04-15 10:55:09.591234810 +0000
+@@ -0,0 +1,25 @@
++params ["_building"];
++
++private _class = _building;
++
++if (typeName _building != "STRING") then {
++	_class = typeOf _building;
++};
++
++private _vehicleClass = getText (configFile >> "CfgVehicles" >> _class >> "vehicleClass");
++
++private _isMilitary = false;
++
++switch(_vehicleClass) do {
++	case "Structures_Military";
++	case "Military";
++	case "Tents";
++	case "Fortifications": {
++		_isMilitary = true;
++	};
++	default {
++		_isMilitary = false;
++	};
++};
++
++_isMilitary;
