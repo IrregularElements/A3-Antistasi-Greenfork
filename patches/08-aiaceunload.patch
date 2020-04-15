@@ -11,8 +11,8 @@ Index: A3-Antistasi-Greenfork/src/functions.hpp
 +
 +	class User
 +	{
-+        class refreshCargoActions {file="refreshCargoActions.sqf"};
-+        class getDisplayName {file="getDisplayName.sqf"};
++        class refreshCargoActions {file="refreshCargoActions.sqf";};
++        class getDisplayName {file="getDisplayName.sqf";};
 +	}
 +}
 Index: A3-Antistasi-Greenfork/src/getDisplayName.sqf
