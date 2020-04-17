@@ -71,8 +71,8 @@ Index: A3-Antistasi-Greenfork/src/dialogs.hpp
         idd = -1;
 Index: A3-Antistasi-Greenfork/src/rebuildAssets.sqf
 ===================================================================
---- A3-Antistasi-Greenfork.orig/src/rebuildAssets.sqf	2020-04-15 10:30:31.062498193 +0000
-+++ A3-Antistasi-Greenfork/src/rebuildAssets.sqf	2020-04-15 10:55:46.161034410 +0000
+--- A3-Antistasi-Greenfork.orig/src/rebuildAssets.sqf	2020-04-17 16:11:24.927230768 +0000
++++ A3-Antistasi-Greenfork/src/rebuildAssets.sqf	2020-04-17 16:13:36.211400806 +0000
 @@ -1,9 +1,13 @@
 -
 -_resourcesFIA = server getVariable "resourcesFIA";
@@ -93,7 +93,7 @@ Index: A3-Antistasi-Greenfork/src/rebuildAssets.sqf
  
  if (!visibleMap) then {openMap true};
  posicionTel = [];
-@@ -18,75 +22,147 @@
+@@ -18,75 +22,161 @@
  
  _posicionTel = posicionTel;
  
@@ -160,7 +160,11 @@ Index: A3-Antistasi-Greenfork/src/rebuildAssets.sqf
 +				{
 +				_salir = true
 +				};
-+			};
+ 			};
+-		}
+-	else
+-		{
+-		_salir = true
 +
 +		if (_salir) exitWith {hint format ["%1",_texto];};
 +
@@ -169,11 +173,7 @@ Index: A3-Antistasi-Greenfork/src/rebuildAssets.sqf
 +				diag_log format ["Greenfork: rebuildAssets[1]: Cannot rebuild a destroyed city"];
 +				hint "Cannot rebuild a destroyed city. Sorry :(";
 +				false;
- 			};
--		}
--	else
--		{
--		_salir = true
++			};
 +			_nombre = [_sitio] call A3A_fnc_localizar;
 +
 +			hint format ["%1 Rebuilt"];
@@ -217,8 +217,33 @@ Index: A3-Antistasi-Greenfork/src/rebuildAssets.sqf
 +	case 2: {
 +		private _closestBuildings = nearestTerrainObjects [_posicionTel, ["House"], 100, true, true] select { !alive _x } select {
 +			private _damagedClass = getText (configFile >> "CfgVehicles" >> (typeOf _x) >> "replaceDamaged");
-+			_damagedClass != "";
++			private _vehicleClass = getText (configFile >> "CfgVehicles" >> (typeOf _x) >> "vehicleClass");
++			(_damagedClass != "") || (_vehicleClass != "Ruins");
 +		};
++
++		if (count _closestBuildings <= 0) exitWith {
++			diag_log format ["Greenfork: rebuildAssets[2]: No destroyed houses found at %1", _posicionTel];
++			hint "No houses found within 100m of this position.";
++			false;
++		};
++
++		private _building = _closestBuildings select 0;
++		private _isMilitary = [_building] call A3A_fnc_isMilitaryBuilding;
++		private _displayName = [_building] call A3A_fnc_getDisplayName;
++		diag_log format ["Greenfork: rebuildAssets[2]: Target building: %1 (%2) (_isMilitary = %3)", _building, _displayName, _isMilitary];
++
++		private _cost = 1000;
++		if (_isMilitary) then {_cost = 5000;};
++
++		private _cash = server getVariable "resourcesFIA";
++
++		if (_cash < _cost) exitWith {
++			diag_log format ["Greenfork: rebuildAssets[2]: Not enough cash for %1 (%2): need %3, have %4", _building, _displayName, _cost, _cash];
++			hint format ["You do not have enough money to rebuild %1. You need %2€", _displayName, _cost];
++			false;
++		};
++
++		diag_log format ["Greenfork: rebuildAssets[2]: Rebuilding %1 (%2) for %3 EUR", _building, _displayName, _cost];
  
 -if (count _antenaMuerta == 0) then
 -	{
@@ -257,51 +282,40 @@ Index: A3-Antistasi-Greenfork/src/rebuildAssets.sqf
 -		["TaskFailed",["", "Radio Tower Destroyed"]] remoteExec ["BIS_fnc_showNotification",malos];
 -		publicVariable "antenas"; publicVariable "antenasMuertas";
 -		}
-+		if (count _closestBuildings <= 0) exitWith {
-+			diag_log format ["Greenfork: rebuildAssets[2]: No destroyed houses found at %1", _posicionTel];
-+			hint "No houses found within 100m of this position.";
-+			false;
-+		};
-+
-+		private _building = _closestBuilding select 0;
-+		private _isMilitary = [_building] call A3A_fnc_isMilitaryBuilding;
-+		private _displayName = [_building] call A3A_fnc_getDisplayName;
-+		private _cost = 1000;
-+		if (_isMilitary) then {_cost = 5000;};
-+
-+		private _cash = server getVariable "resourcesFIA";
-+
-+		if (_cash < _cost) exitWith {
-+			diag_log format ["Greenfork: rebuildAssets[2]: Not enough cash for %1 (%2): need %3, have %4", _building, _displayName, _cost, _cash];
-+			hint format ["You do not have enough money to rebuild %1. You need %2€", _displayName, _cost];
-+			false;
-+		};
-+
-+		[0,-_cost] remoteExec ["A3A_fnc_resourcesFIA",2];
-+		diag_log format ["Greenfork: rebuildAssets[2]: Rebuilding %1 (%2) for %3EUR", _building, _displayName, _cost];
++		// TODO: add locking
 +		_building setDamage 0;
-+		destroyedBuildings = destroyedBuildings - [getPosATL _building];
-+		publicVariable "destroyedBuildings";
 +
-+		hint composeText [
-+			"Building rebuilt!",
++		private _pos = destroyedBuildings findIf {
++			(_x distance2D (getPosATL _building)) < 5
++		};
++
++		destroyedBuildings deleteAt _pos;
++		publicVariable "destroyedBuildings"; publicVariableServer "destroyedBuildings";
++
++		private _text = composeText ["Building restored!",
 +			lineBreak,
-+			(format ["%1", _displayName]),
++			_displayName,
 +			lineBreak,
-+			(format ["Position: %1", (mapGridPosition _building)]),
++			format ["Position: %1", mapGridPosition _building],
 +			lineBreak,
-+			(format ["Cost: %1", _cost])
++			format ["Cost: %1", _cost]
  		];
++
++		if (_pos != -1) then {
++			[0,-_cost] remoteExec ["A3A_fnc_resourcesFIA", 2];
++			hint _text;
++		} else {
++			diag_log format ["Greenfork: rebuildAssets[2]: Failed to find position in destroyedBuildings"];
++			hint "Failed to find the building in destroyedBuildings, bailing";
++		};
++	};
++
++	default {
++		diag_log format ["Greenfork: rebuildAssets: invalid _type: %1", _type];
++		false;
  	};
 -[0,-5000] remoteExec ["A3A_fnc_resourcesFIA",2];
 \ No newline at end of file
-+
-+	default {
-+		exitWith {
-+			diag_log format ["Greenfork: rebuildAssets: invalid _type: %1", _type];
-+			false;
-+		};
-+	};
 +};
 Index: A3-Antistasi-Greenfork/src/functions.hpp
 ===================================================================
@@ -344,3 +358,91 @@ Index: A3-Antistasi-Greenfork/src/isMilitaryBuilding.sqf
 +};
 +
 +_isMilitary;
+Index: A3-Antistasi-Greenfork/src/init.sqf
+===================================================================
+--- A3-Antistasi-Greenfork.orig/src/init.sqf	2020-04-07 22:55:01.177498119 +0000
++++ A3-Antistasi-Greenfork/src/init.sqf	2020-04-17 20:33:57.592448044 +0000
+@@ -60,8 +60,13 @@
+             if (_this select 2) then
+                 {
+                 destroyedBuildings pushBack (getPosATL _building);
++                } else {
++                if(damage _this != 0) then {
++                    destroyedBuildings deleteAt (destroyedBuildings findIf {_this distance2D _x < 1});
++                };
+                 };
+             };
++        publicVariable "destroyedBuildings"; publicVariableServer "destroyedBuildings";
+         }];
+     deleteMarker "respawn_east";
+     if (buenos == independent) then {deleteMarker "respawn_west"} else {deleteMarker "respawn_guerrila"};
+Index: A3-Antistasi-Greenfork/src/initServer.sqf
+===================================================================
+--- A3-Antistasi-Greenfork.orig/src/initServer.sqf	2020-04-17 20:29:10.448377612 +0000
++++ A3-Antistasi-Greenfork/src/initServer.sqf	2020-04-17 20:32:00.580828744 +0000
+@@ -151,8 +151,13 @@
+             if (_this select 2) then
+                 {
+                 destroyedBuildings pushBack (getPosATL _building);
++                } else {
++                if(damage _this != 0) then {
++                    destroyedBuildings deleteAt (destroyedBuildings findIf {_this distance2D _x < 1});
++                };
+                 };
+             };
++        publicVariable "destroyedBuildings"; publicVariableServer "destroyedBuildings";
+         }];
+ 
+ serverInitDone = true; publicVariable "serverInitDone";
+Index: A3-Antistasi-Greenfork/src/initVar.sqf
+===================================================================
+--- A3-Antistasi-Greenfork.orig/src/initVar.sqf	2020-04-07 22:55:01.183498101 +0000
++++ A3-Antistasi-Greenfork/src/initVar.sqf	2020-04-17 20:34:10.002407516 +0000
+@@ -645,7 +645,7 @@
+ unlockedAA = [];
+ garageIsUsed = false;
+ vehInGarage = [];
+-destroyedBuildings = []; //publicVariable "destroyedBuildings";
++destroyedBuildings = []; publicVariable "destroyedBuildings";
+ hayTFAR = false;
+ hayACRE = false;
+ hayACE = false;
+@@ -811,4 +811,4 @@
+ publicVariable "unlockedAA";
+ publicVariable "initialRifles";
+ 
+-if (isMultiplayer) then {[[petros,"hint","Variables Init Completed"],"A3A_fnc_commsMP"] call BIS_fnc_MP;};
+\ No newline at end of file
++if (isMultiplayer) then {[[petros,"hint","Variables Init Completed"],"A3A_fnc_commsMP"] call BIS_fnc_MP;};
+Index: A3-Antistasi-Greenfork/src/statSave/loadAccount.sqf
+===================================================================
+--- A3-Antistasi-Greenfork.orig/src/statSave/loadAccount.sqf	2020-04-17 20:29:10.450377606 +0000
++++ A3-Antistasi-Greenfork/src/statSave/loadAccount.sqf	2020-04-17 20:34:53.164266348 +0000
+@@ -166,6 +166,7 @@
+ 
+ 	["chopForest"] call fn_LoadStat;
+ 	["destroyedBuildings"] call fn_LoadStat;
++	publicVariable "destroyedBuildings"; publicVariableServer "destroyedBuildings";
+ 	/*
+ 	{
+ 	_buildings = nearestObjects [_x, listMilBld, 25, true];
+Index: A3-Antistasi-Greenfork/src/statSave/saveFuncs.sqf
+===================================================================
+--- A3-Antistasi-Greenfork.orig/src/statSave/saveFuncs.sqf	2020-04-17 20:29:10.449377609 +0000
++++ A3-Antistasi-Greenfork/src/statSave/saveFuncs.sqf	2020-04-17 20:35:27.824152741 +0000
+@@ -171,7 +171,7 @@
+ 		if(_varName == 'destroyedBuildings') then
+ 			{
+ 			destroyedBuildings= +_varValue;
+-			//publicVariable "destroyedBuildings";
++			publicVariable "destroyedBuildings"; publicVariableServer "destroyedBuildings";
+ 			{
+ 			//(nearestBuilding _x) setDamage [1,false];
+ 			[nearestBuilding _x,[1,false]] remoteExec ["setDamage"];
+@@ -369,4 +369,4 @@
+ };
+ 
+ //==================================================================================================================================================================================================
+-saveFuncsLoaded = true;
+\ No newline at end of file
++saveFuncsLoaded = true;
