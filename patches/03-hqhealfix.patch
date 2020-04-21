@@ -11,3 +11,15 @@ Index: A3-Antistasi-Greenfork/src/healandrepair.sqf
  		}
  	else
  		{
+Index: A3-Antistasi-Greenfork/src/initVar.sqf
+===================================================================
+--- A3-Antistasi-Greenfork.orig/src/initVar.sqf	2020-04-21 20:41:28.212245117 +0000
++++ A3-Antistasi-Greenfork/src/initVar.sqf	2020-04-21 20:41:51.728176739 +0000
+@@ -725,6 +725,7 @@
+ 		"ACE_salineIV_250",
+ 		"ACE_surgicalKit",
+ 		"ACE_tourniquet",
++		"ACE_splint",
+ 		"ACE_adenosine",
+ 		"ACE_atropine"
+ 	]; publicVariable "aceAdvMedItems";
