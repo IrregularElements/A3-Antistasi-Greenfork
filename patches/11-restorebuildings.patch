@@ -407,13 +407,6 @@ Index: A3-Antistasi-Greenfork/src/initVar.sqf
  hayTFAR = false;
  hayACRE = false;
  hayACE = false;
-@@ -811,4 +811,4 @@
- publicVariable "unlockedAA";
- publicVariable "initialRifles";
- 
--if (isMultiplayer) then {[[petros,"hint","Variables Init Completed"],"A3A_fnc_commsMP"] call BIS_fnc_MP;};
-\ No newline at end of file
-+if (isMultiplayer) then {[[petros,"hint","Variables Init Completed"],"A3A_fnc_commsMP"] call BIS_fnc_MP;};
 Index: A3-Antistasi-Greenfork/src/statSave/loadAccount.sqf
 ===================================================================
 --- A3-Antistasi-Greenfork.orig/src/statSave/loadAccount.sqf	2020-04-17 20:29:10.450377606 +0000
