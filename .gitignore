@@ -2,3 +2,6 @@
 /.pc
 *.rej
 *.orig
+
+patchgraph.dot
+patchgraph.png
