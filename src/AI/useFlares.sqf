@@ -1,7 +1,7 @@
 private ["_unit","_flares","_eny","_pos","_veh","_exit"];
 
 _unit = _this select 0;
-if (time < _unit getVariable ["smokeUsed",time - 1]) exitWith {};
+if (time < (group _unit) getVariable ["smokeUsed",time - 1]) exitWith {};
 
 if (vehicle _unit != _unit) exitWith {};
 _flares = _unit getVariable ["usedFlares",3];
@@ -14,7 +14,7 @@ if (count _this > 1) then
 	if (_eny distance _unit > 300) then {_exit = true};
 	};
 if (_exit) exitWith {};
-_unit setVariable ["smokeUsed",time + 60];
+(group _unit) setVariable ["smokeUsed",time + 60];
 _unit setVariable ["usedFlares",_flares - 1];
 //hint "bengala va!";
 _pos = if !(isNull _eny) then
@@ -25,7 +25,7 @@ else
 	{
 	_unit getPos [100,random 360];
 	};
-_pos set [2,150];
+_pos set [2,200];
 
 _veh = "F_40mm_white" createvehicle _pos;
 _veh setVelocity [-10+random 20,-10+random 20,-10];

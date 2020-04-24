@@ -47,7 +47,6 @@ class A3A
         class powerReorg {file="powerReorg.sqf";};
         class prestige {file="prestige.sqf";};
         class puestoDialog {file="puestoDialog.sqf";};
-        class radioCheck {file="radioCheck.sqf";};
         class rebuildAssets {file="rebuildAssets.sqf";};
         class resourceCheckSkipTime {file="resourcecheckSkipTime.sqf";};
         class resourcesFIA {file="resourcesFIA.sqf";};
@@ -62,7 +61,6 @@ class A3A
         class undercover {file="undercover.sqf";};
         class unlockVehicle {file="unlockVehicle.sqf";};
         class zoneCheck {file="zoneCheck.sqf";};
-        //class tempMoveMrk {file="tempMoveMrk.sqf";};
     }
 
 	class AI
@@ -106,7 +104,6 @@ class A3A
         class inmuneConvoy {file="AI\inmuneConvoy.sqf";};
         class landThreatEval {file="AI\landThreatEval.sqf";};
         class mineSweep {file="AI\mineSweep.sqf";};
-        class mortarDrill {file="AI\mortarDrill.sqf";};
         class mortarSupport {file="AI\mortarSupport.sqf";};
         class mortyAI {file="AI\mortyAI.sqf";};
         class napalm {file="AI\napalm.sqf";};
@@ -120,6 +117,7 @@ class A3A
         class staticAutoT {file="AI\staticAutoT.sqf";};
         class staticMGDrill {file="AI\staticMGDrill.sqf";};
         class surrenderAction {file="AI\surrenderAction.sqf";};
+        class tankAI {file="AI\tankAI.sqf";};
         class typeOfSoldier {file="AI\typeOfSoldier.sqf";};
         class undercoverAI {file="AI\undercoverAI.sqf";};
         class unitGetToCover {file="AI\unitGetToCover.sqf";};
@@ -191,14 +189,15 @@ class A3A
 	class Municion
 	{
         class ACEpvpReDress {file="Municion\ACEpvpReDress.sqf";};
+        class addWeapon {file="Municion\addWeapon.sqf";};
         class arsenalManage {file="Municion\arsenalManage.sqf";};
         class CSATCrate {file="Municion\CSATCrate.sqf";};
+        class modAIRedress {file="Municion\modAIredress.sqf";};
         class munitionTransfer {file="Municion\munitionTransfer.sqf";};
         class NATOCrate {file="Municion\NATOCrate.sqf";};
         class randomRifle {file="Municion\randomRifle.sqf";};
         class RHSdress {file="Municion\RHSdress.sqf";};
         class vaciar {file="Municion\vaciar.sqf";};
-        //class cajaAAF {file="Municion\cajaAAF.sqf";};
 	}
 
 	class OrgPlayers

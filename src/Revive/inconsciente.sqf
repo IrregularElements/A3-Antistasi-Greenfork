@@ -34,12 +34,22 @@ if (isPlayer _unit) then
 			{
 			if (player getVariable ["INCAPACITATED",false]) then
 				{
-				if !(isMultiplayer) then
+				if (!isMultiplayer and !visibleMap) then
 					{
 					_ayudado = player getVariable ["ayudado",objNull];
 					if !(isNull _ayudado) then
 						{
-						if (_ayudado distance player > 3) then {_ayudado setPosASL (getPosASL player)};
+						if ([_ayudado] call A3A_fnc_canFight) then
+							{
+							if (_ayudado distance player > 2) then
+								{
+								_ayudado setPosASL (getPosASL player)
+								}
+							else
+								{
+								if !(isNull (attachedTo _ayudado)) then {deleteVehicle (attachedTo _ayudado)};
+								};
+							};
 						};
 					};
 				};
@@ -77,7 +87,7 @@ else
 			_marcador = _unit getVariable ["marcador",""];
 			if (_marcador != "") then
 				{
-				if (!([_marcador] call BIS_fnc_taskExists) and (lados getVariable [_marcador,sideUnknown] == buenos)) then {[_marcador,_injurer,buenos] remoteExec ["A3A_fnc_underAttack",2]};
+				if (!([_marcador] call BIS_fnc_taskExists) and (lados getVariable [_marcador,sideUnknown] == buenos) and ([_unit] call A3A_fnc_hasRadio)) then {[_marcador,_injurer,buenos] remoteExec ["A3A_fnc_underAttack",2]};
 				};
 			};
 		};
@@ -140,7 +150,7 @@ while {(time < _bleedOut) and (_unit getVariable ["INCAPACITATED",false]) and (a
 				}
 			else
 				{
-				if (_ayuda != _unit) then {_texto = format ["<t size='0.6'>%1 is on the way to help you.<t size='0.5'><br/>Hit R to Respawn",name _ayuda]} else {_texto = "<t size='0.6'>Wait until you get assistance or<t size='0.5'><br/>Hit R to Respawn"};
+				if (_ayuda != _unit) then {_texto = format ["<t size='0.6'>%1 is on the way to help you.<t size='0.5'><br/>Hit R to Respawn<br/>Hit SPACE to teleport %1 to your position or stop being carried",name _ayuda]} else {_texto = "<t size='0.6'>Wait until you get assistance or<t size='0.5'><br/>Hit R to Respawn"};
 				};
 			}
 		else
@@ -149,7 +159,7 @@ while {(time < _bleedOut) and (_unit getVariable ["INCAPACITATED",false]) and (a
 				{
 				if (!isNull _ayuda) then
 					{
-					_texto = if (isMultiplayer) then {format ["<t size='0.6'>%1 is on the way to help you.<t size='0.5'><br/>Hit R to Respawn",name _ayuda]} else {format ["<t size='0.6'>%1 is on the way to help you.<t size='0.5'><br/>Hit R to Respawn<br/>Hit SPACE to teleport %1 to your position",name _ayuda]};
+					_texto = if (isMultiplayer) then {format ["<t size='0.6'>%1 is on the way to help you.<t size='0.5'><br/>Hit R to Respawn",name _ayuda]} else {format ["<t size='0.6'>%1 is on the way to help you.<t size='0.5'><br/>Hit R to Respawn<br/>Hit SPACE to teleport %1 to your position or stop being carried",name _ayuda]};
 					}
 				else
 					{

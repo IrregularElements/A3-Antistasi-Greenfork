@@ -34,7 +34,7 @@ if (_tipo in SDKSniper) then
 	if (count unlockedSN > 0) then
 		{
 		_unit setSkill ["aimingSpeed",0];
-		[_unit, selectRandom unlockedSN, 12, 0] call BIS_fnc_addWeapon;
+		[_unit, selectRandom unlockedSN, 12, 0] call A3A_fnc_addWeapon;
 		if (count unlockedOptics > 0) then
 			{
 			_compatibles = [primaryWeapon _unit] call BIS_fnc_compatibleItems;
@@ -66,7 +66,7 @@ else
 			if ((random 20 < skillFIA) and (count unlockedAA > 0)) then
 				{
 				_unit addbackpack (unlockedBackpacks select 0);
-				[_unit, selectRandom unlockedAA, 2, 0] call BIS_fnc_addWeapon;
+				[_unit, selectRandom unlockedAA, 2, 0] call A3A_fnc_addWeapon;
 				//removeBackpack _unit;
 				};
 			};
@@ -103,9 +103,15 @@ else
 				if (_tipo in SDKMedic) then
 					{
 					_unit setUnitTrait ["medic",true];
-					if ({_x == "FirstAidKit"} count (items _unit) < 10) then
+					if (hayIFA) then
+							{
+							_unit addBackpack "B_LIB_GER_MedicBackpack_Empty";
+							_unit addItemToBackpack "Medikit";
+							};
+					_numKits = {_x == "FirstAidKit"} count (items _unit);
+					if (_numKits < 6) then
 						{
-						for "_i" from 1 to 10 do {_unit addItemToBackpack "FirstAidKit"};
+						for "_i" from _numKits to 6 do {_unit addItemToBackpack "FirstAidKit"};
 						};
 					}
 				else
@@ -120,14 +126,27 @@ else
 								_magazines = getArray (configFile / "CfgWeapons" / (secondaryWeapon _unit) / "magazines");
 								{_unit removeMagazines _x} forEach _magazines;
 								_unit removeWeaponGlobal (secondaryWeapon _unit);
-								[_unit, _rlauncher, 4, 0] call BIS_fnc_addWeapon;
+								if (backpack _unit == "") then
+									{
+									_best = 0;
+									_backpack = "";
+									{
+									if ((getNumber (configFile >> "CfgVehicles" >> _x >> "maximumload")) > _best) then
+										{
+										_best = getNumber (configFile >> "CfgVehicles" >> _x >> "maximumload");
+										_backpack = _x;
+										};
+									} forEach (unlockedBackpacks - ["B_LIB_US_M2Flamethrower"]);
+									_unit addBackpack _backpack;
+									};
+								[_unit, _rlauncher, 4, 0] call A3A_fnc_addWeapon;
 								};
 							}
 						else
 							{
 							if (hayIFA) then
 								{
-								[_unit, "LIB_PTRD", 10, 0] call BIS_fnc_addWeapon;
+								[_unit, "LIB_PTRD", 10, 0] call A3A_fnc_addWeapon;
 								};
 							};
 						}
@@ -201,7 +220,7 @@ if !(hayIFA) then
 			};
 		};
 	};
-if ({if (_x in humo) exitWith {1}} count unlockedMagazines > 0) then {_unit addMagazines [selectRandom humo,2]};
+if (({if (_x in humo) exitWith {1}} count unlockedMagazines > 0) or ({if (_x in humo) exitWith {1}} count unlockedWeapons > 0)) then {_unit addMagazines [selectRandom humo,2]};
 
 _EHkilledIdx = _unit addEventHandler ["killed", {
 	_muerto = _this select 0;

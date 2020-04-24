@@ -84,6 +84,7 @@ else
 		_ChildControl  ctrlSetTooltip format ["Cost: %1 €",(server getVariable staticCrewBuenos) + ([SDKMortar] call A3A_fnc_vehiclePrice)];
 		_ChildControl = _display displayCtrl 109;
 		_ChildControl  ctrlSetTooltip format ["Cost: %1 €",server getVariable (SDKGL select 0)];
+		if (hayIFA) then {_childControl ctrlSetText "Radio Operator"};
 		_ChildControl = _display displayCtrl 110;
 		_ChildControl  ctrlSetTooltip format ["Cost: %1 €",server getVariable (SDKSniper select 0)];
 		_ChildControl = _display displayCtrl 111;

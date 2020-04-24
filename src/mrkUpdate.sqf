@@ -25,7 +25,7 @@ if (lados getVariable [_marcador,sideUnknown] == buenos) then
 			{
 			 if (_marcador in recursos) then
 			 	{
-			 	_texto = format ["Resouces%1",_texto];
+			 	_texto = format ["Resources%1",_texto];
 			 	}
 			 else
 			 	{

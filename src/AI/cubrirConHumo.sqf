@@ -4,11 +4,11 @@ _unit = _this select 0;
 if !([_unit] call A3A_fnc_canFight) exitWith {};
 _ayudado = _this select 1;
 _return = false;
-if (time < _unit getVariable ["smokeUsed",time - 1]) exitWith {_return};
+if (time < (group _unit) getVariable ["smokeUsed",time - 1]) exitWith {_return};
 
 if (vehicle _unit != _unit) exitWith {};
 
-_unit setVariable ["smokeUsed",time + 60];
+(group _unit) setVariable ["smokeUsed",time + 60];
 
 _muzzle = [_unit] call A3A_fnc_returnMuzzle;
 _enemy = if (count _this > 2) then {_this select 2} else {_unit findNearestEnemy _unit};

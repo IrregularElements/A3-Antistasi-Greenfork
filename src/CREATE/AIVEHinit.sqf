@@ -66,6 +66,7 @@ if ((_tipo in vehNormal) or (_tipo in vehAttack) or (_tipo in vehBoats)) then
 						};
 					}];
 				_veh addEventHandler ["HandleDamage",{private ["_veh"]; _veh = _this select 0; if ((!canFire _veh)  or (!(canMove _veh))) then {[_veh] call A3A_fnc_smokeCoverAuto; _veh call A3A_fnc_askForEngineer}}];
+				_veh spawn A3A_fnc_tankAI;
 				}
 			else
 				{
@@ -165,7 +166,7 @@ else
 						};
 					if (random 100 < _chance) then
 						{
-						{if ((side _x == malos) or (side _x == muyMalos)) then {_x reveal [_mortero,4]}} forEach allUnits;
+						_mortero getVariable ["detection",[position _mortero,0]];
 						if (_mortero distance posHQ < 300) then
 							{
 							if (!(["DEF_HQ"] call BIS_fnc_taskExists)) then

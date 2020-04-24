@@ -1349,3 +1349,52 @@ meter veh civiles IFA y rehacer lo relativo a JNL
 - On AutoRearm when AI is completely run out of ammo, they will pick whatever weapon.
 - RoE will show proper description depending on the game mode.
 - Lowered a bit more HR income on each tick.
+
+1.5.1 20/03/2020
+
+- NEW FEATURE: Extended RT cover to some player actions such as receive info or be able to recruit. If requester is inside an outpost / seapor / airbase he will be able to request, if not, a nearest owned RT (and rebel HQ) check is done if requester has radios. In case of fail, no QRFs or player actions can be performed.
+- IFA: Added bunkers and MGs for Wermacht roadblocks.
+- IFA: Fixed lack of FA kit on some AI types.
+- IFA: Added all AK helmets as unlocked in Arsenal.
+- IFA: Convoy objective models are no longer from Vanilla.
+- IFA: AK medics will spawn with backpacks and 5 FA kits.
+- IFA: You can at last recruit MG / Mortar teams and squads :)
+- IFA: Added static weapon carriers to gov and inv factions. PLEASE NOTE: Wont be on garrisons on old saves, at least on the begining.
+- IFA: Added vanilla radio for the SP as its impossible to read and hear the AI messages without it
+- IFA: Halved civilian vehicle traffic as it was unrealistic.
+- IFA: Fixed AJ AT men spawning with backpacks and ammo when some AT weapon is unlocked.
+- IFA: Fixed AJ not using smoke even with smoke nades unlocked.
+- IFA: Fixed bug when Wehrmacht attacks from outside of the map from land.
+- IMPORTANT: AI tanks now shoot their cannons against buildings if they think there is infantry inside. Hiding is no longer 100% safe agianst them.
+- IMPORTANT: Cities will be targeted on major attacks, if in range of some available airbase, no matter what.
+- Radio cover checks for QRF are executed on clients.
+- Corrected tons of Jeroen Logistics attachment positions thanks to the Community Team!!!
+- Fixed AI not using some unlocked sub machine guns.
+- Train button now shows the right cost.
+- AI will attend revive requests from other AI if the injured has FA kits and not the attendant.
+- Optimised help revive request code a bit.
+- SpecOp patrolled areas won't build minefields.
+- More reliable AI dismount from vehicle if they spot enemies.
+- More reliable reaching for medics to revive.
+- Re established AI sending multiple small attacks over undergarrisoned rebel positions instead of launching major attacks.
+- Smoke and flare timings will be group based instead of unit based so the amount of smoke is lower.
+- Reworked a bit RHS detection code to avoid bugs in dedi.
+- IFA: Removed diving stuff.
+- IFA: Rebel radio operators wont spawn with flamethrowers.
+- AI will use flares when they are assaulting positions not only in IFA.
+- Some garrison AI will use flares to scan for enemies.
+- AI wont use flares when they lose a squadmate.
+- Map Info option now shows which cities are considered by the engine as "Major" so, priority target for government and which of them have been secured.
+- IFA: Garrison info now shows Radio Operators instead of Grenadiers.
+- During the night, Gov and Inv AI without flashlights and nightvision will have much lower spotting skills.
+- Map info now shows if some garrison has radio cover or not.
+- On squad rescue missions maximum enemies will be lower and spawn more distant from the rebel squad.
+- Dig in scripts will avoid cover positions with the AI extremely close eachother.
+- Fixed several napalm strikes in one time when airstrikes have been asked in short time.
+- Hitting SPACE while being carried in SP will stop AI of carrying him and it will start healing process.
+- Modified BIS function to add weapon as it dindt used all the inventory slots available to add magazines.
+- A bit more effective airstrikes for non jet bombers (IFA and Vanilla rebels).
+- Anti mortar airstrikes wont be continuous upon mortar abuse (the counter of chance to receive one is reset).
+- SP Major attacks limited to 3 waves.
+- Fixed ammobox loading on vehicles on Sea Supply missions.
+- While soldiers are on revive anims, if they vanilla heal and they run out of FA kits, the revive will be cancelled.

@@ -5,7 +5,7 @@
 //Not commented lines cannot be changed.
 //Don't touch them.
 
-antistasiVersion = "v 1.5.0.0";
+antistasiVersion = "v 1.5.1.0";
 
 
 debug = false;//debug variable, not useful for everything..
@@ -62,7 +62,7 @@ mlaunchers = [];
 rlaunchers = [];
 cascos = [];
 //vests = [];
-
+/*
 if (!(isServer) and isMultiplayer) then
 	{
 	waitUntil {!isNil "hayRHS"}
@@ -70,7 +70,7 @@ if (!(isServer) and isMultiplayer) then
 else
 	{
 	hayRHS = false;
-	};
+	};*/
 //lockedWeapons = ["Rangefinder","Laserdesignator"];
 
 _allPrimaryWeapons = "
@@ -124,6 +124,7 @@ if (not(_nombre in _yaMetidos)) then
 		case "MissileLauncher": {mlaunchers pushBack _nombre};
 		case "RocketLauncher": {rlaunchers pushBack _nombre};
 		case "Headgear": {cascos pushBack _nombre};
+		case "SubmachineGun": {arifles pushBack _nombre};
 		//case "Vest": {vests pushBack _nombre};
 		};
 
@@ -132,32 +133,28 @@ if (not(_nombre in _yaMetidos)) then
 //vests = vests select {getNumber (configfile >> "CfgWeapons" >> _x >> "ItemInfo" >> "HitpointsProtectionInfo" >> "Chest" >> "armor") > 5};
 if (!isServer and isMultiplayer) then
 	{
-	waitUntil {(!isNil "activeAFRF") and(!isNil "activeUSAF") and (!isNil "activeGREF") and (!isNil "hayFFAA") and (!isNil "hayIFA") and (!isNil "myCustomMod")};
-	};
-activeAFRF = false;
-activeUSAF = false;
-activeGREF = false;
-hayFFAA = false;
-hayIFA = false;
-myCustomMod = false;
-
-if ((isClass(configFile/"CfgPatches"/"LIB_Core")) and (isServer or hayIFA)) then
-	{
-	if (isServer) then {hayIFA = true};
-	cascos = [];
-	humo = ["LIB_RDG","LIB_NB39"];
+	waitUntil {sleep 1;(!isNil "activeAFRF") and(!isNil "activeUSAF") and (!isNil "activeGREF") and (!isNil "hayFFAA") and (!isNil "hayIFA") and (!isNil "myCustomMod")};
 	}
 else
 	{
-	if (("rhs_weap_akms" in arifles) and (isServer or activeAFRF)) then {activeAFRF = true; hayRHS = true};
-	if (("ffaa_armas_hkg36k_normal" in arifles) and (isServer or hayFFAA)) then {hayFFAA = true};
-	if (("rhs_weap_m4a1_d" in arifles) and (isServer or activeUSAF)) then {activeUSAF = true; hayRHS = true};
-	if (("rhs_weap_m92" in arifles) and (isServer or activeGREF)) then {activeGREF = true; hayRHS = true} else {mguns pushBack "LMG_Mk200_BI_F"};
-	cascos = cascos select {getNumber (configfile >> "CfgWeapons" >> _x >> "ItemInfo" >> "HitpointsProtectionInfo" >> "Head" >> "armor") > 2};
-	humo = ["SmokeShell","SmokeShellRed","SmokeShellGreen","SmokeShellBlue","SmokeShellYellow","SmokeShellPurple","SmokeShellOrange"];
-	};
-if (isServer and isMultiplayer) then
-	{
+	hayRHS = false;
+	activeAFRF = false;
+	activeUSAF = false;
+	activeGREF = false;
+	hayFFAA = false;
+	hayIFA = false;
+	myCustomMod = false;
+	if (isClass(configFile/"CfgPatches"/"LIB_Core")) then
+		{
+		hayIFA = true;
+		}
+	else
+		{
+		if ("rhs_weap_akms" in arifles) then {activeAFRF = true; hayRHS = true};
+		if ("ffaa_armas_hkg36k_normal" in arifles) then {hayFFAA = true};
+		if ("rhs_weap_m4a1_d" in arifles) then {activeUSAF = true; hayRHS = true};
+		if ("rhs_weap_m92" in arifles) then {activeGREF = true; hayRHS = true};
+		};
 	publicVariable "hayRHS";
 	publicVariable "activeAFRF";
 	publicVariable "hayFFAA";
@@ -165,6 +162,18 @@ if (isServer and isMultiplayer) then
 	publicVariable "activeGREF";
 	publicVariable "hayIFA";
 	publicVariable "myCustomMod";
+	};
+
+if (hayIFA) then
+	{
+	cascos = [];
+	humo = ["LIB_RDG","LIB_NB39"];
+	}
+else
+	{
+	if !(activeGREF) then {mguns pushBack "LMG_Mk200_BI_F"};
+	cascos = cascos select {getNumber (configfile >> "CfgWeapons" >> _x >> "ItemInfo" >> "HitpointsProtectionInfo" >> "Head" >> "armor") > 2};
+	humo = ["SmokeShell","SmokeShellRed","SmokeShellGreen","SmokeShellBlue","SmokeShellYellow","SmokeShellPurple","SmokeShellOrange"];
 	};
 titanLaunchers = if ((!hayRHS) and !hayIFA and !myCustomMod) then
 	{
@@ -220,6 +229,7 @@ else
 		if (hayIFA and !myCustomMod) then {["FirstAidKit","Medikit","ToolKit","LIB_ToolKit"]} else {["FirstAidKit","Medikit","ToolKit"]};
 		}
 	};
+
 NVGoggles = if (!hayIFA) then {["NVGoggles_OPFOR","NVGoggles_INDEP","O_NVGoggles_hex_F","O_NVGoggles_urb_F","O_NVGoggles_ghex_F","NVGoggles_tna_F","NVGoggles"]} else {[]};
 
 arrayCivVeh = if !(hayIFA) then
@@ -235,7 +245,7 @@ municionNATO = [];
 armasNATO = [];
 municionCSAT = [];
 armasCSAT = [];
-
+needToRedress = [];
 if (!hayIFA) then
 	{
 	if (!activeUSAF) then
@@ -297,14 +307,14 @@ _checked = [];
 {
 {
 _tipo = _x;
-if !(_tipo in _checked) then
+if (!(_tipo in _checked) and !(_tipo in needToRedress)) then
 	{
 	_checked pushBack _tipo;
 	_loadout = getUnitLoadout _tipo;
 	for "_i" from 0 to 2 do
 		{
 		_weapon = [((_loadout select _i) select 0)] call BIS_fnc_baseWeapon;
-		if !(_weapon in armasCSAT) then {armasCSAT pushBack _weapon};
+		if (!(_weapon in armasCSAT) and (_weapon != "")) then {armasCSAT pushBack _weapon};
 		};
 	};
 } forEach _x;
@@ -313,14 +323,14 @@ _checked = [];
 {
 {
 _tipo = _x;
-if !(_tipo in _checked) then
+if (!(_tipo in _checked) and !(_tipo in needToRedress)) then
 	{
 	_checked pushBack _tipo;
 	_loadout = getUnitLoadout _tipo;
 	for "_i" from 0 to 2 do
 		{
 		_weapon = [((_loadout select _i) select 0)] call BIS_fnc_baseWeapon;
-		if !(_weapon in armasNATO) then {armasNATO pushBack _weapon};
+		if (!(_weapon in armasNATO) and (_weapon != "")) then {armasNATO pushBack _weapon};
 		};
 	};
 } forEach _x;
@@ -497,9 +507,9 @@ else
 	};
 listMilBld = ["Land_Cargo_Tower_V1_F","Land_Cargo_Tower_V1_No1_F","Land_Cargo_Tower_V1_No2_F","Land_Cargo_Tower_V1_No3_F","Land_Cargo_Tower_V1_No4_F","Land_Cargo_Tower_V1_No5_F","Land_Cargo_Tower_V1_No6_F","Land_Cargo_Tower_V1_No7_F","Land_Cargo_Tower_V2_F", "Land_Cargo_Tower_V3_F","Land_Cargo_HQ_V1_F","Land_Cargo_HQ_V2_F","Land_Cargo_HQ_V3_F","Land_Cargo_Patrol_V1_F","Land_Cargo_Patrol_V2_F","Land_Cargo_Patrol_V3_F","Land_HelipadSquare_F"];
 listbld = ["Land_Cargo_Tower_V1_F","Land_Cargo_Tower_V1_No1_F","Land_Cargo_Tower_V1_No2_F","Land_Cargo_Tower_V1_No3_F","Land_Cargo_Tower_V1_No4_F","Land_Cargo_Tower_V1_No5_F","Land_Cargo_Tower_V1_No6_F","Land_Cargo_Tower_V1_No7_F","Land_Cargo_Tower_V2_F", "Land_Cargo_Tower_V3_F"];
-swoopShutUp = ["V_RebreatherIA","G_Diving"];
+swoopShutUp = if !(hayIFA) then {["V_RebreatherIA","G_Diving"]} else {[]};
 difficultyCoef = if !(isMultiplayer) then {0} else {floor ((({side group _x == buenos} count playableUnits) - ({side group _x != buenos} count playableUnits)) / 5)};
-if (side (group petros) == west) then {swoopShutUp pushBack "U_B_Wetsuit"} else {swoopShutUp pushBack "U_I_Wetsuit"};
+if (!hayIFA) then {if (side (group petros) == west) then {swoopShutUp pushBack "U_B_Wetsuit"} else {swoopShutUp pushBack "U_I_Wetsuit"}};
 
 //Pricing values for soldiers, vehicles
 if (!isServer) exitWith {};
@@ -546,8 +556,7 @@ server setVariable ["resourcesFIA",1000,true];//Initial FIA money pool value
 skillFIA = 0;//Initial skill level for FIA soldiers
 prestigeNATO = 5;//Initial Prestige NATO
 prestigeCSAT = 5;//Initial Prestige CSAT
-prestigeOPFOR = 50;//Initial % support for NATO on each city
-if (not cadetMode) then {prestigeOPFOR = 75};//if you play on vet, this is the number
+prestigeOPFOR = if (cadetMode) then {50} else {75};//Initial % support for NATO on each city
 prestigeBLUFOR = 0;//Initial % FIA support on each city
 cuentaCA = 600;//600
 bombRuns = 0;
@@ -573,7 +582,14 @@ if !(hayIFA) then
 	}
 else
 	{
-	unlockedItems = ["ItemMap","ItemWatch","ItemCompass","FirstAidKit","Medikit","ToolKit","LIB_ToolKit","H_LIB_CIV_Villager_Cap_1","H_LIB_CIV_Worker_Cap_2","G_LIB_Scarf2_B","G_LIB_Mohawk"] + uniformsSDK + civUniforms;
+	unlockedItems = ["ItemMap","ItemWatch","ItemCompass","FirstAidKit","Medikit","ToolKit","LIB_ToolKit","H_LIB_CIV_Villager_Cap_1","H_LIB_CIV_Worker_Cap_2","G_LIB_Scarf2_B","G_LIB_Mohawk","H_LIB_WP_Helmet_camo","H_LIB_WP_Helmet","H_LIB_WP_Helmet_med"] + uniformsSDK + civUniforms;
+	if (!isMultiplayer) then
+		{
+		haveRadio = true;
+		//_index = "ItemRadio" call jn_fnc_arsenal_itemType;
+		//[_index,"ItemRadio",-1] call jn_fnc_arsenal_addItem;
+		unlockedItems pushBack "ItemRadio";
+		};
 	};
 
 
@@ -636,7 +652,7 @@ _vest = _loadOut select 4;
 if !(_vest isEqualTo []) then {unlockedItems pushBackUnique (_vest select 0)};
 } forEach [SDKSniper,SDKATman,SDKMedic,SDKMG,SDKExp,SDKGL,SDKMil,SDKSL,SDKEng,[SDKUnarmed],[staticCrewBuenos]];
 
-unlockedBackpacks = if !(hayIFA) then {["B_FieldPack_oli","B_FieldPack_blk","B_FieldPack_ocamo","B_FieldPack_oucamo","B_FieldPack_cbr"]} else {["B_LIB_US_M2Flamethrower","B_LIB_SOV_RA_MGAmmoBag_Empty"]}; //Initial Arsenal available backpacks
+unlockedBackpacks = if !(hayIFA) then {["B_FieldPack_oli","B_FieldPack_blk","B_FieldPack_ocamo","B_FieldPack_oucamo","B_FieldPack_cbr"]} else {["B_LIB_US_M2Flamethrower","B_LIB_SOV_RA_MGAmmoBag_Empty","B_LIB_GER_MedicBackpack_Empty"]}; //Initial Arsenal available backpacks
 //lockedMochis = lockedMochis - unlockedBackpacks;
 unlockedOptics = [];
 unlockedMG = [];

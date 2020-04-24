@@ -36,6 +36,18 @@ private _tipoVeh = 	if !(_esMortero) then
 private _mochiG = backPack _gunner;
 private _mochiA = backpack _ayudante;
 
+if (hayIFA and (_tipoVeh != CSATMG)) then
+	{
+	_mochiA = secondaryWeapon _ayudante;
+	if (_tipoVeh in [SDKMGStatic,NATOMG]) then
+		{
+		_mochiG = primaryWeapon _gunner;
+		}
+	else
+		{
+		_mochiG = secondaryWeapon _gunner;
+		};
+	};
 while {(alive _gunner)} do
 	{
 	sleep 15;
@@ -104,8 +116,17 @@ while {(alive _gunner)} do
 						{
 						private _veh = _tipoVeh createVehicle [0,0,1000];
 						_veh setPos position (_gunner);
-						removeBackpackGlobal _gunner;
-						removeBackpackGlobal _ayudante;
+						if (hayIFA and _tipoVeh in [SDKMGStatic,NATOMG,CSATMG]) then {_veh setDir (getDir _gunner)};
+						if (hayIFA and (_tipoVeh != CSATMG)) then
+							{
+							_gunner removeWeapon _mochiG;
+							_ayudante removeWeapon _mochiA;
+							}
+						else
+							{
+							removeBackpackGlobal _gunner;
+							removeBackpackGlobal _ayudante;
+							};
 						_grupo addVehicle _veh;
 						_gunner assignAsGunner _veh;
 						[_gunner] orderGetIn true;
@@ -131,8 +152,16 @@ while {(alive _gunner)} do
 					if (alive _gunner) then
 						{
 						_mounted = false;
-						_gunner addBackpackGlobal _mochiG;
-						_ayudante addBackpackGlobal _mochiA;
+						if (hayIFA and (_tipoVeh != CSATMG)) then
+							{
+							_gunner addWeapon _mochiG;
+							_ayudante addWeapon _mochiA;
+							}
+						else
+							{
+							_gunner addBackpackGlobal _mochiG;
+							_ayudante addBackpackGlobal _mochiA;
+							};
 						deleteVehicle _veh;
 						_gunner call A3A_fnc_recallGroup;
 						if (_esMortero) then {_grupo setVariable ["morteros",objNull]};
@@ -152,8 +181,16 @@ while {(alive _gunner)} do
 				_veh = vehicle _gunner;
 				moveOut _gunner;
 				_mounted = false;
-				_gunner addBackpackGlobal _mochiG;
-				_ayudante addBackpackGlobal _mochiA;
+				if (hayIFA and (_tipoVeh != CSATMG)) then
+					{
+					_gunner addWeapon _mochiG;
+					_ayudante addWeapon _mochiA;
+					}
+				else
+					{
+					_gunner addBackpackGlobal _mochiG;
+					_ayudante addBackpackGlobal _mochiA;
+					};
 				deleteVehicle _veh;
 				_gunner call A3A_fnc_recallGroup;
 				if (_esMortero) then {_grupo setVariable ["morteros",objNull]};

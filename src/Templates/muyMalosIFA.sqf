@@ -8,10 +8,10 @@ staticCrewMuyMalos = "LIB_SOV_gun_crew";
 CSATmedic = "LIB_SOV_medic";
 CSATAA = "LIB_SOV_mgunner";
 CSATAT = "LIB_SOV_AT_soldier";
-CSATMortarMan = "";
+CSATMortarMan = "O_Support_Mort_F";
 CSATEngineer = "LIB_SOV_sapper";
-CSATMGSupp = "";
-CSATMortSupp = "";
+CSATMGSupp = "O_support_AMG_F";
+CSATMortSupp = "O_Support_AMort_F";
 
 CSATPilot = "LIB_SOV_pilot";
 CSATMortar = "LIB_BM37";
@@ -51,28 +51,28 @@ CSATAmmoBox = "O_supplyCrate_F";
 gruposCSATSentry = ["LIB_SOV_LC_rifleman_summer","LIB_SOV_rifleman"];///"O_T_InfSentry";///
 gruposCSATSniper = ["LIB_SOV_scout_sniper_autumn","LIB_SOV_scout_sergeant"];
 gruposCSATsmall = [gruposCSATSentry,gruposCSATSniper];///[gruposCSATSentry,"O_T_reconSentry","O_T_SniperTeam"];///
-gruposCSATAA = ["LIB_SOV_sergeant",CSATAA,"LIB_SOV_smgunner_summer","LIB_SOV_smgunner_summer"];
-gruposCSATAT = ["LIB_SOV_sergeant",CSATAT,CSATAT,"LIB_SOV_AT_grenadier"];
-gruposCSATmid = [["LIB_SOV_sergeant","LIB_SOV_LC_rifleman_summer","LIB_SOV_smgunner_summer","LIB_SOV_LC_rifleman_summer"],gruposCSATAA,gruposCSATAT];///["O_T_InfTeam","O_T_InfTeam_AA","O_T_InfTeam_AT"];///
-CSATSquad = ["LIB_SOV_sergeant",CSATAA,"LIB_SOV_LC_rifleman_summer","LIB_SOV_smgunner_summer","LIB_SOV_smgunner_summer",CSATAT,"LIB_SOV_AT_grenadier",CSATmedic];
+gruposCSATAA = ["LIB_SOV_sergeant",CSATAA,"LIB_SOV_smgunner_summer","LIB_SOV_operator"];
+gruposCSATAT = ["LIB_SOV_sergeant",CSATAT,CSATAT,"LIB_SOV_operator"];
+gruposCSATmid = [["LIB_SOV_sergeant","LIB_SOV_LC_rifleman_summer","LIB_SOV_smgunner_summer","LIB_SOV_operator"],gruposCSATAA,gruposCSATAT];///["O_T_InfTeam","O_T_InfTeam_AA","O_T_InfTeam_AT"];///
+CSATSquad = ["LIB_SOV_sergeant",CSATAA,"LIB_SOV_LC_rifleman_summer","LIB_SOV_smgunner_summer","LIB_SOV_smgunner_summer",CSATAT,"LIB_SOV_operator",CSATmedic];
 
 CSATSquadAA = CSATSquad;
-CSATSquadMortar = [];
-CSATSquadMG = [];
-CSATSquadEng = ["LIB_SOV_sergeant",CSATAA,"LIB_SOV_LC_rifleman_summer",CSATEngineer,CSATEngineer,CSATAT,"LIB_SOV_assault_smgunner",CSATmedic];
-CSATSquadAT = ["LIB_SOV_sergeant",CSATAT,"LIB_SOV_LC_rifleman_summer","LIB_SOV_smgunner_summer","LIB_SOV_smgunner_summer",CSATAT,"LIB_SOV_AT_grenadier",CSATmedic];
+CSATSquadMortar = ["LIB_SOV_sergeant",CSATAA,"LIB_SOV_LC_rifleman_summer","LIB_SOV_smgunner_summer",CSATMortarMan,CSATMortSupp,"LIB_SOV_operator",CSATmedic];
+CSATSquadMG = ["LIB_SOV_sergeant",CSATAA,"LIB_SOV_LC_rifleman_summer","LIB_SOV_smgunner_summer",staticCrewMuyMalos,CSATMGSupp,"LIB_SOV_operator",CSATmedic];
+CSATSquadEng = ["LIB_SOV_sergeant",CSATAA,"LIB_SOV_LC_rifleman_summer",CSATEngineer,CSATEngineer,CSATAT,"LIB_SOV_operator",CSATmedic];
+CSATSquadAT = ["LIB_SOV_sergeant",CSATAT,"LIB_SOV_LC_rifleman_summer","LIB_SOV_smgunner_summer","LIB_SOV_smgunner_summer",CSATAT,"LIB_SOV_operator",CSATmedic];
 
-CSATSpecOp = ["LIB_SOV_scout_p_officer","LIB_SOV_scout_sergeant","LIB_SOV_scout_mgunner","LIB_SOV_scout_smgunner","LIB_SOV_scout_rifleman","LIB_SOV_scout_smgunner","LIB_SOV_scout_sniper","LIB_SOV_scout_sniper"];///(configfile >> "CfgGroups" >> "East" >> "OPF_T_F" >> "SpecOps" >> "O_T_ViperTeam");///
+CSATSpecOp = ["LIB_SOV_scout_p_officer","LIB_SOV_scout_sergeant","LIB_SOV_scout_mgunner","LIB_SOV_scout_smgunner","LIB_SOV_scout_rifleman","LIB_SOV_scout_smgunner","LIB_SOV_operator",CSATmedic];///(configfile >> "CfgGroups" >> "East" >> "OPF_T_F" >> "SpecOps" >> "O_T_ViperTeam");///
 factionMachoMuyMalos = "";
-gruposCSATSquad = [CSATSquad,,CSATSquadAA,CSATSquadEng,CSATSquadAT];//[CSATSquad,"O_T_InfSquad_Weapons"];///"O_T_Engineer_F"
+gruposCSATSquad = [CSATSquad,CSATSquadAA,CSATSquadEng,CSATSquadAT];//[CSATSquad,"O_T_InfSquad_Weapons"];///"O_T_Engineer_F"
 
 soporteStaticCSATB = "not_supported";
 ATStaticCSATB = "not_supported";
-MGStaticCSATB = "not_supported";
-soporteStaticCSATB2 = "not_supported";
+MGStaticCSATB = "LIB_Maxim_Bar";//backpack
+soporteStaticCSATB2 = "LIB_Maxim_Bag";//backpack
 AAStaticCSATB = "not_supported";
-MortStaticCSATB = "not_supported";
-soporteStaticCSATB3 = "not_supported";
+MortStaticCSATB = "LIB_BM37_Barrel";//secondary
+soporteStaticCSATB3 = "LIB_BM37_Tripod";//secondary
 
 armasCSAT append ["LIB_SVT_40","LIB_M9130","LIB_DP28","LIB_PPSh41_m","LIB_PPSh41_d","LIB_M9130PU","LIB_RPzB","LIB_FLARE_PISTOL","LIB_TT33"];
 municionCSAT append ["LIB_10Rnd_762x54","LIB_5Rnd_762x54","LIB_1Rnd_flare_red","LIB_F1","LIB_1Rnd_flare_green","LIB_1Rnd_flare_yellow","LIB_Rg42","LIB_47Rnd_762x54","LIB_35Rnd_762x25","LIB_8Rnd_762x25","LIB_71Rnd_762x25","LIB_1Rnd_RPzB","LIB_Rpg6","LIB_RDG"];
@@ -81,3 +81,5 @@ nameMuyMalos = "Soviets";
 if (isServer) then {"CSAT_carrier" setMarkerText "Soviet Reinforcements"};
 
 {cascos pushBackUnique (getUnitLoadout _x select 6)} forEach CSATSquad;
+
+needToRedress append [staticCrewMuyMalos,CSATMortarMan,CSATMGSupp,CSATMortSupp];

@@ -371,7 +371,7 @@ if (not(headgear _unit in cascos)) then
 		};
 	};
 _hayCaja = false;
-_minFA = if ([_unit] call A3A_fnc_isMedic) then {10} else {1};
+_minFA = if ([_unit] call A3A_fnc_isMedic) then {6} else {1};
 
 if ({_x == "FirstAidKit"} count (items _unit) < _minFA) then
 	{

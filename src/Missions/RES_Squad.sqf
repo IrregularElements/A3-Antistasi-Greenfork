@@ -31,7 +31,7 @@ _grupos pushBack _grupo;
 {[_x] call A3A_fnc_FIAinitBASES; _POWs pushBack _x} forEach units _grupo;
 [_grupo,true] spawn A3A_fnc_digIn;
 private _dificil = (random 15 < tierWar);
-private _max = if (_dificil) then {3} else {1};
+private _max = if (_dificil) then {2} else {1};
 for "_i" from 0 to _max do
 	{
 	_ang = _i * 90;
@@ -39,7 +39,7 @@ for "_i" from 0 to _max do
 	while {(surfaceIsWater _pos)} do
 		{
 		_ang = _ang + 5;
-		_pos = _posicion getPos [_size,_ang];
+		_pos = _posicion getPos [_size+500,_ang];
 		};
 	_tipoGrupo = if (_lado == malos) then {selectRandom gruposNATOSquad} else {selectRandom gruposCSATquad};
 	_grupo = [_pos,_lado,_tipoGrupo,false] call A3A_fnc_spawnGroup;

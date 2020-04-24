@@ -9,7 +9,6 @@ _unit allowFleeing 0;
 _tipo = typeOf _unit;
 _skill = skillFIA * 0.05;
 if (!activeGREF) then {if (not((uniform _unit) in uniformsSDK)) then {[_unit] call A3A_fnc_reDress}};
-
 if ((!isMultiplayer) and (leader _unit == theBoss)) then {_skill = _skill + 0.1};
 _unit setSkill _skill;
 if (_tipo in SDKSniper) then
@@ -20,7 +19,7 @@ if (_tipo in SDKSniper) then
 		_magazines = getArray (configFile / "CfgWeapons" / (primaryWeapon _unit) / "magazines");
 		{_unit removeMagazines _x} forEach _magazines;
 		_unit removeWeaponGlobal (primaryWeapon _unit);
-		[_unit, selectRandom unlockedSN, 12, 0] call BIS_fnc_addWeapon;
+		[_unit, selectRandom unlockedSN, 12, 0] call A3A_fnc_addWeapon;
 		if (count unlockedOptics > 0) then
 			{
 			_compatibles = [primaryWeapon _unit] call BIS_fnc_compatibleItems;
@@ -46,13 +45,13 @@ else
 		};
 	if ((_tipo in SDKMil) or (_tipo == staticCrewBuenos)) then
 		{
-		[_unit,unlockedRifles,false] call A3A_fnc_randomRifle;
+		if (!hayIFA or (_tipo in SDKMil)) then {[_unit,unlockedRifles,false] call A3A_fnc_randomRifle};
 		if ((loadAbs _unit < 340) and (_tipo in SDKMil)) then
 			{
 			if ((random 20 < skillFIA) and (count unlockedAA > 0)) then
 				{
 				_unit addbackpack (unlockedBackpacks select 0);
-				[_unit, selectRandom unlockedAA, 2, 0] call BIS_fnc_addWeapon;
+				[_unit, selectRandom unlockedAA, 2, 0] call A3A_fnc_addWeapon;
 				//removeBackpack _unit;
 				};
 			};
@@ -95,9 +94,15 @@ else
 					if (_tipo in SDKMedic) then
 						{
 						_unit setUnitTrait ["medic",true];
-						if ({_x == "FirstAidKit"} count (items _unit) < 10) then
+						if (hayIFA) then
 							{
-							for "_i" from 1 to 10 do {_unit addItemToBackpack "FirstAidKit"};
+							_unit addBackpack "B_LIB_GER_MedicBackpack_Empty";
+							_unit addItemToBackpack "Medikit";
+							};
+						_numKits = {_x == "FirstAidKit"} count (items _unit);
+						if (_numKits < 6) then
+							{
+							for "_i" from _numKits to 6 do {_unit addItemToBackpack "FirstAidKit"};
 							};
 						}
 					else
@@ -112,14 +117,27 @@ else
 									_magazines = getArray (configFile / "CfgWeapons" / (secondaryWeapon _unit) / "magazines");
 									{_unit removeMagazines _x} forEach _magazines;
 									_unit removeWeaponGlobal (secondaryWeapon _unit);
-									[_unit, _rlauncher, 4, 0] call BIS_fnc_addWeapon;
+									if (backpack _unit == "") then
+										{
+										_best = 0;
+										_backpack = "";
+										{
+										if ((getNumber (configFile >> "CfgVehicles" >> _x >> "maximumload")) > _best) then
+											{
+											_best = getNumber (configFile >> "CfgVehicles" >> _x >> "maximumload");
+											_backpack = _x;
+											};
+										} forEach (unlockedBackpacks - ["B_LIB_US_M2Flamethrower"]);
+										_unit addBackpack _backpack;
+										};
+									[_unit, _rlauncher, 4, 0] call A3A_fnc_addWeapon;
 									};
 								}
 							else
 								{
 								if (hayIFA) then
 									{
-									[_unit, "LIB_PTRD", 10, 0] call BIS_fnc_addWeapon;
+									[_unit, "LIB_PTRD", 10, 0] call A3A_fnc_addWeapon;
 									};
 								};
 							}
@@ -148,7 +166,7 @@ if (!haveRadio) then
 	if ((_unit != leader _unit) and (_tipo != staticCrewBuenos)) then {_unit unlinkItem "ItemRadio"};
 	};
 
-if ({if (_x in humo) exitWith {1}} count unlockedMagazines > 0) then {_unit addMagazines [selectRandom humo,2]};
+if (({if (_x in humo) exitWith {1}} count unlockedMagazines > 0) or ({if (_x in humo) exitWith {1}} count unlockedWeapons > 0)) then {_unit addMagazines [selectRandom humo,2]};
 if !(hayIFA) then
 	{
 	if ((sunOrMoon < 1) and (_tipo != SDKUnarmed)) then
@@ -201,18 +219,7 @@ if !(hayIFA) then
 			};
 		};
 	};
-/*
-if ((_tipo != "B_G_Soldier_M_F") and (_tipo != "B_G_Sharpshooter_F")) then {if (_aiming > 0.35) then {_aiming = 0.35}};
 
-_unit setskill ["aimingAccuracy",_aiming];
-_unit setskill ["spotDistance",_spotD];
-_unit setskill ["spotTime",_spotT];
-_unit setskill ["courage",_cour];
-_unit setskill ["commanding",_comm];
-_unit setskill ["aimingShake",_aimingSh];
-_unit setskill ["aimingSpeed",_aimingSp];
-_unit setskill ["reloadSpeed",_reload];
-*/
 if (player == leader _unit) then
 	{
 	_unit setVariable ["owner",player];
@@ -256,7 +263,7 @@ if (player == leader _unit) then
 		while {alive _unit} do
 			{
 			sleep 10;
-			if (("ItemRadio" in assignedItems _unit) and ([player] call A3A_fnc_hasRadio)) exitWith {_unit groupChat format ["This is %1, radiocheck OK",name _unit]};
+			if ("ItemRadio" in assignedItems _unit) exitWith {_unit groupChat format ["This is %1, radiocheck OK",name _unit]};
 			if (unitReady _unit) then
 				{
 				if ((alive _unit) and (_unit distance (getMarkerPos respawnBuenos) > 50) and (_unit distance leader group _unit > 500) and ((vehicle _unit == _unit) or ((typeOf (vehicle _unit)) in arrayCivVeh))) then

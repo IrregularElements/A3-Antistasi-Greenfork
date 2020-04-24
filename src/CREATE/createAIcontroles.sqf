@@ -17,7 +17,7 @@ _esFIA = false;
 _salir = false;
 
 _esControl = if (isOnRoad _posicion) then {true} else {false};
-
+_size = [_marcador] call A3A_fnc_sizeMarker;
 if (_esControl) then
 	{
 	if (gameMode != 4) then
@@ -138,13 +138,8 @@ else
 	_frontera = if (count _marcadores > 0) then {true} else {false};
 	if (_frontera) then
 		{
-		_cfg = CSATSpecOp;
-		if (lados getVariable [_marcador,sideUnknown] == malos) then
-			{
-			_cfg = NATOSpecOp;
-			_lado = malos;
-			};
-		_size = [_marcador] call A3A_fnc_sizeMarker;
+		_cfg = if (_lado == malos) then {NATOSpecOp} else {CSATSpecOp};
+		/*
 		if ({if (_x inArea _marcador) exitWith {1}} count allMines == 0) then
 			{
 			for "_i" from 1 to 60 do
@@ -153,6 +148,7 @@ else
 				if (_lado == malos) then {malos revealMine _mina} else {muyMalos revealMine _mina};
 				};
 			};
+		*/
 		_grupo = [_posicion,_lado, _cfg] call A3A_fnc_spawnGroup;
 		_nul = [leader _grupo, _marcador, "SAFE","SPAWNED","RANDOM","NOVEH2","NOFOLLOW"] execVM "scripts\UPSMON.sqf";
 		if !(hayIFA) then

@@ -36,6 +36,7 @@ _unit doMove _cobertura;
 		_unit setCombatMode "YELLOW";
 		//_unit setBehaviour "COMBAT";
 		_unit setUnitPos "AUTO";
+		{_unit enableAI _x} forEach ["SUPPRESSION","WEAPONAIM","CHECKVISIBLE"];
 		_unit doWatch (_unit findNearestEnemy _unit);
 		sleep 30;
 		};

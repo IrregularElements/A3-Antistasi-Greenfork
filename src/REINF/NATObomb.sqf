@@ -1,6 +1,6 @@
 
 //if (!allowPlayerRecruit) exitWith {hint "Server is very loaded. \nWait one minute or change FPS settings in order to fulfill this request"};
-	if (!([player] call A3A_fnc_hasRadio)) exitWith {if !(hayIFA) then {hint "You need a radio in your inventory to be able to give orders to other squads"} else {hint "You need a Radio Man in your group to be able to give orders to other squads"}};
+	if (!([player] call A3A_fnc_hasRadio)) exitWith {};
 if ({lados getVariable [_x,sideUnknown] == buenos} count aeropuertos == 0) exitWith {hint "You need to control an airport in order to fulfill this request"};
 _tipo = _this select 0;
 _puntos = 1;

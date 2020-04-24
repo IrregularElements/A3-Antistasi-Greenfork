@@ -5,7 +5,7 @@ SDKMGStatic = "LIB_M1919_M2";
 staticATBuenos = "LIB_Pak40";
 staticAABuenos = "LIB_FlaK_30";
 
-staticCrewBuenos = "LIB_US_Bomber_Crew";
+staticCrewBuenos = "LIB_WP_Starszy_strzelec";
 SDKUnarmed = "I_G_Survivor_F";
 SDKSniper = ["LIB_WP_Sniper","LIB_WP_Sniper"];
 SDKATman = ["LIB_WP_AT_grenadier","LIB_WP_AT_grenadier"];
@@ -32,11 +32,11 @@ tipoPetros = "LIB_WP_Sierzant";
 
 soporteStaticSDKB = "not_supported";
 ATStaticSDKB = "not_supported";
-MGStaticSDKB = "not_supported";
-soporteStaticSDKB2 = "not_supported";
+MGStaticSDKB = "LIB_M1919A4";//primary
+soporteStaticSDKB2 = "LIB_M2_Tripod";//secondary
 AAStaticSDKB = "not_supported";
-MortStaticSDKB = "not_supported";
-soporteStaticSDKB3 = "not_supported";
+MortStaticSDKB = "LIB_M2_60_Barrel";//secondary
+soporteStaticSDKB3 = "LIB_M2_60_Tripod";//secondary
 
 civCar = "LIB_GazM1_dirty";
 civTruck = "LIB_DAK_OpelBlitz_Open";
@@ -83,3 +83,4 @@ gruposNATOGen = [policeOfficer,policeGrunt];
 nameBuenos = "AK";
 
 factionGEN = "SG_STURMPANZER";
+needToRedress append [SDKUnarmed];

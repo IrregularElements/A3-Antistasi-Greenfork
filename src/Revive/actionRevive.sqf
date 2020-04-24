@@ -2,7 +2,7 @@ private ["_curado","_curandero","_healed","_player","_timer","_lado","_accion"];
 
 _curado = _this select 0;
 _curandero = _this select 1;
-_accion = 0;
+_accion = 999;
 _healed = false;
 _player = isPlayer _curandero;
 _inPlayerGroup = if !(_player) then {if ({isPlayer _x} count (units group _curandero) > 0) then {true} else {false}} else {false};
@@ -102,15 +102,22 @@ _curandero addEventHandler ["AnimDone",
 		{
 		_curandero removeEventHandler ["AnimDone",_thisEventHandler];
 		_curandero setVariable ["animsDone",true];
-		if (([_curandero] call A3A_fnc_canFight) and !(_curandero getVariable ["cancelRevive",false]) and (_curandero == vehicle _curandero) and (alive _curado)) then
+		if (not("FirstAidKit" in (items _curandero))) then
 			{
-			if (_curado getVariable ["INCAPACITATED",false]) then
+			_curandero setVariable ["cancelRevive",true];
+			}
+		else
+			{
+			if (([_curandero] call A3A_fnc_canFight) and !(_curandero getVariable ["cancelRevive",false]) and (_curandero == vehicle _curandero) and (alive _curado)) then
 				{
-				_curandero setVariable ["success",true];
-				//_curado setVariable ["INCAPACITATED",false,true];
-				//_curandero action ["HealSoldier",_curado];
-				if ([_curandero] call A3A_fnc_isMedic) then {_curado setDamage 0.25} else {_curado setDamage 0.5};
-				_curandero removeItem "FirstAidKit";
+				if (_curado getVariable ["INCAPACITATED",false]) then
+					{
+					_curandero setVariable ["success",true];
+					//_curado setVariable ["INCAPACITATED",false,true];
+					//_curandero action ["HealSoldier",_curado];
+					if ([_curandero] call A3A_fnc_isMedic) then {_curado setDamage 0.25} else {_curado setDamage 0.5};
+					_curandero removeItem "FirstAidKit";
+					};
 				};
 			};
 		};
@@ -126,16 +133,16 @@ if (!_player) then
 	}
 else
 	{
-	_curandero removeAction _accion;
+	if (_accion != 999) then {_curandero removeAction _accion};
 	_curado setVariable ["ayudado",objNull,true];
 	_curandero setVariable ["ayudando",false];
 	};
 if (_curandero getVariable ["cancelRevive",false]) exitWith
 	{
+	_curandero setVariable ["cancelRevive",nil];
 	if (_player) then
 		{
 		hint "Revive cancelled";
-		_curandero setVariable ["cancelRevive",nil];
 		};
 	_healed
 	};

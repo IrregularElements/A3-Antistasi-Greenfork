@@ -40,19 +40,14 @@ if (_medico != _unit) then
 	_medico doMove getPosATL _unit;
 	while {true} do
 		{
-		if (!([_medico] call A3A_fnc_canFight) or (!alive _unit) or (_medico distance _unit <= 3) or (_timeOut < time) or (_unit != vehicle _unit) or (_medico != vehicle _medico) or (_medico != _unit getVariable ["ayudado",objNull]) or !(isNull attachedTo _unit) or (_medico getVariable ["cancelRevive",false])) exitWith {};
+		if (!([_medico] call A3A_fnc_canFight) or (!alive _unit) or (_medico distance _unit <= 2.5) or (_timeOut < time) or (_unit != vehicle _unit) or (_medico != vehicle _medico) or (_medico != _unit getVariable ["ayudado",objNull]) or !(isNull attachedTo _unit) or (_medico getVariable ["cancelRevive",false])) exitWith {};
 		sleep 1;
 		};
-	/*
-	if ((isPlayer _unit) and !(isMultiplayer))  then
-		{
-		if (([_medico] call A3A_fnc_canFight) and (_medico distance _unit > 3) and (_medico == _unit getVariable ["ayudado",objNull]) and !(_unit getVariable ["llevado",false]) and (allUnits findIf {((side _x == malos) or (side _x == muyMalos)) and (_x distance2D _unit < 50)} == -1)) then {_medico setPos position _unit};
-		};
-	*/
-	if ((_unit distance _medico <= 2) and (alive _unit) and ([_medico] call A3A_fnc_canFight) and (_medico == vehicle _medico) and (_medico == _unit getVariable ["ayudado",objNull]) and (isNull attachedTo _unit) and !(_medico getVariable ["cancelRevive",false])) then
+	if ((_unit distance _medico <= 3) and (alive _unit) and ([_medico] call A3A_fnc_canFight) and (_medico == vehicle _medico) and (_medico == _unit getVariable ["ayudado",objNull]) and (isNull attachedTo _unit) and !(_medico getVariable ["cancelRevive",false])) then
 		{
 		if ((_unit getVariable ["INCAPACITATED",false]) and (!isNull _enemy) and (_timeOut >= time) and (_medico != _unit)) then
 			{
+			if (_isPlayer and !isMultiplayer) then {_medico setPosATL (getPosATL _unit)};
 			_cobertura = [_unit,_enemy] call A3A_fnc_cobertura;
 			{if (([_x] call A3A_fnc_canFight) and (_x distance _medico < 50) and !(_x getVariable ["ayudando",false]) and (!isPlayer _x)) then {[_x,_enemy] call A3A_fnc_fuegoSupresor}} forEach units (group _medico);
 			if (count _cobertura == 3) then
@@ -72,6 +67,7 @@ if (_medico != _unit) then
 					_dummyGrp = createGroup civilian;
 					_dummy = _dummyGrp createUnit ["C_man_polo_1_F", [0,0,20], [], 0, "FORM"];
 					_dummy setUnitPos "MIDDLE";
+					_dummy allowDamage false;
 					_dummy forceWalk true;
 					_dummy setSkill 0;
 					if (isMultiplayer) then {[_dummy,true] remoteExec ["hideObjectGlobal",2]} else {_dummy hideObject true};
@@ -79,6 +75,8 @@ if (_medico != _unit) then
 					_dummy setBehaviour "CARELESS";
 					_dummy disableAI "FSM";
 					_dummy disableAI "SUPPRESSION";
+					_dummy disableAI "TARGET";
+					_dummy disableAI "AUTOTARGET";
 				    _dummy forceSpeed 0.2;
 				    _dummy setPosATL (getPosATL _medico);
 					_medico attachTo [_dummy, [0, -0.2, 0]];
@@ -92,7 +90,7 @@ if (_medico != _unit) then
 					while {true} do
 						{
 						sleep 0.2;
-						if (!([_medico] call A3A_fnc_canFight) or (!alive _unit) or (_medico distance _cobertura <= 2) or (_timeOut < time) or (_medico != vehicle _medico) or (_medico getVariable ["cancelRevive",false])) exitWith {};
+						if (!([_medico] call A3A_fnc_canFight) or (!alive _unit) or (_medico distance _cobertura <= 2) or (_timeOut < time) or (_medico != vehicle _medico) or (_medico getVariable ["cancelRevive",false]) or (isNull _dummy)) exitWith {};
 						if (_unit distance _dummy > 3) then
 							{
 							detach _unit;
@@ -110,8 +108,11 @@ if (_medico != _unit) then
 						};
 					detach _unit;
 					detach _medico;
-					detach _dummy;
-					deleteVehicle _dummy;
+					if !(isNull _dummy) then
+						{
+						detach _dummy;
+						deleteVehicle _dummy;
+						};
 					deleteGroup _dummyGrp;
 					_medico enableAI "ANIM";
 					};

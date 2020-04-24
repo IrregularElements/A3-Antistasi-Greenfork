@@ -125,6 +125,7 @@ while {({alive _x} count units _grupo > 0) and (_grupo getVariable ["attackDrill
 		_flankers = _flankers select {[_x] call A3A_fnc_canFight};
 		_objetivos = _grupo call A3A_fnc_enemyList;
 		_grupo setVariable ["objetivos",_objetivos];
+		_hasRadio = [leader _grupo] call A3A_fnc_hasRadio;
 		if !(_objetivos isEqualTo []) then
 			{
 			_aire = objNull;
@@ -161,7 +162,7 @@ while {({alive _x} count units _grupo > 0) and (_grupo getVariable ["attackDrill
 				{
 				if (_allNearFriends findIf {(_x call A3A_fnc_typeOfSoldier == "AAMan") or (_x call A3A_fnc_typeOfSoldier == "StaticGunner")} == -1) then
 					{
-					if (_lado != buenos) then {[[getPosASL _lider,_lado,"Air",false],"A3A_fnc_patrolCA"] remoteExec ["A3A_fnc_scheduler",2]};
+					if ((_lado != buenos) and _hasRadio) then {[[getPosASL _lider,_lado,"Air",false],"A3A_fnc_patrolCA"] remoteExec ["A3A_fnc_scheduler",2]};
 					_hide = true;
 					};
 				};
@@ -182,7 +183,7 @@ while {({alive _x} count units _grupo > 0) and (_grupo getVariable ["attackDrill
 							}
 						else
 							{
-							if (_lado != buenos) then {[[getPosASL _lider,_lado,"Tank",false],"A3A_fnc_patrolCA"] remoteExec ["A3A_fnc_scheduler",2]};
+							if ((_lado != buenos) and _hasRadio) then {[[getPosASL _lider,_lado,"Tank",false],"A3A_fnc_patrolCA"] remoteExec ["A3A_fnc_scheduler",2]};
 							};
 						};
 					_hide = true;
@@ -206,7 +207,7 @@ while {({alive _x} count units _grupo > 0) and (_grupo getVariable ["attackDrill
 							}
 						else
 							{
-							if (_lado != buenos) then {[[getPosASL _lider,_lado,"Normal",false],"A3A_fnc_patrolCA"] remoteExec ["A3A_fnc_scheduler",2]};
+							if ((_lado != buenos) and _hasRadio) then {[[getPosASL _lider,_lado,"Normal",false],"A3A_fnc_patrolCA"] remoteExec ["A3A_fnc_scheduler",2]};
 							};
 						};
 					_hide = true;
@@ -309,7 +310,7 @@ while {({alive _x} count units _grupo > 0) and (_grupo getVariable ["attackDrill
 									else
 										{
 										{
-										[_x,_cercano] call A3A_fnc_fuegoSupresor;
+										[_x,_cercano] call A3A_fnc_useFlares;
 										} forEach _baseOfFire select {(_x getVariable ["typeOfSoldier",""] == "Normal") and (count (getArray (configfile >> "CfgWeapons" >> primaryWeapon _x >> "muzzles")) == 2)};
 										};
 									};
@@ -350,10 +351,10 @@ while {({alive _x} count units _grupo > 0) and (_grupo getVariable ["attackDrill
 								{
 								[_x,_x,_cercano] spawn A3A_fnc_cubrirConHumo;
 								} forEach (_baseOfFire select {(_x getVariable ["typeOfSoldier",""] == "Normal")});
-								if ([getPosASL _cercano] call A3A_fnc_isBuildingPosition) then
+								_building = [getPosASL _cercano] call A3A_fnc_isBuildingPosition;
+								if !(isNull _building) then
 									{
 									_ingeniero = objNull;
-									_building = nearestBuilding _cercano;
 									if !(_building getVariable ["asaltado",false]) then
 										{
 										{
@@ -404,7 +405,7 @@ while {({alive _x} count units _grupo > 0) and (_grupo getVariable ["attackDrill
 								}
 							else
 								{
-								if (_lado != buenos) then {[[getPosASL _lider,_lado,"Normal",false],"A3A_fnc_patrolCA"] remoteExec ["A3A_fnc_scheduler",2]};
+								if ((_lado != buenos) and _hasRadio) then {[[getPosASL _lider,_lado,"Normal",false],"A3A_fnc_patrolCA"] remoteExec ["A3A_fnc_scheduler",2]};
 								};
 							};
 						};

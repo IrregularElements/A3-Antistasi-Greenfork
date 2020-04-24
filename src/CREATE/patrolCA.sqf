@@ -14,7 +14,7 @@ if ([_marcador,false] call A3A_fnc_fogCheck < 0.3) exitWith {diag_log format ["A
 if (_aeropuerto isEqualType "") then
 	{
 	_inWaves = true;
-	if (lados getVariable [_aeropuerto,sideUnknown] == muyMalos) then {_lado = muyMalos};
+	_lado = lados getVariable [_aeropuerto,sideUnknown];
 	_posOrigen = getMarkerPos _aeropuerto;
 	}
 else
@@ -35,27 +35,15 @@ if (_marcador isEqualType "") then
 else
 	{
 	_posDestino = _marcador;
-	_sitios = (puestos + puertos + aeropuertos) select {(lados getVariable [_x,SideUnknown] == _lado) and ((getMarkerPos _x) distance2D _marcador < distanciaSPWN2)};
-	if (([_posDestino] call A3A_fnc_powerCheck != _lado) and (_sitios isEqualTo [])) then
+	_cercanos = count (smallCApos select {_x distance2D _marcador < distanciaSPWN2});
+	{if ((getMarkerPos _x distance2D _marcador) < distanciaSPWN2) then {_cercanos = _cercanos +1}} forEach smallCAmrk;
+	if (_cercanos >= (tierWar/2)) then
 		{
-		_exit = true;
-		}
-	else
-		{
-		_cercanos = count (smallCApos select {_x distance2D _marcador < distanciaSPWN2});
-		if !(smallCAmrk isEqualTo []) then
-			{
-			_cercano = [smallCAmrk,_marcador] call BIS_fnc_nearestPosition;
-			if (getMarkerPos _cercano distance _marcador < distanciaSPWN2) then {_cercanos = _cercanos + 1};
-			};
-		if (_cercanos >= (tierWar/2)) then
-			{
-			_exit = true
-			};
+		_exit = true
 		};
 	};
 
-if (_exit) exitWith {diag_log format ["Antistasi PatrolCA: CA cancelled because of other CA in vincity of %1 or no radio cover",_marcador]};
+if (_exit) exitWith {diag_log format ["Antistasi PatrolCA: CA cancelled because of other CA in vincity of %1",_marcador]};
 
 _enemigos = allUnits select {_x distance _posDestino < distanciaSPWN2 and (side (group _x) != _lado) and (side (group _x) != civilian) and (alive _x)};
 
@@ -359,6 +347,7 @@ if (_base != "") then
 				_Vwp1 setWaypointBehaviour "COMBAT";
 				[_veh,"APC"] spawn A3A_fnc_inmuneConvoy;
 				_veh allowCrewInImmobile true;
+				_veh setUnloadInCombat [true, false];
 				}
 			else
 				{
@@ -377,7 +366,7 @@ if (_base != "") then
 				_Vwp0 setWaypointType "GETOUT";
 				//_Vwp0 setWaypointStatements ["true", "(group this) spawn A3A_fnc_attackDrillAI"];
 				_Vwp1 = _grupoVeh addWaypoint [_posDestino, count (wayPoints _grupoVeh)];
-				_Vwp1 setWaypointStatements ["true","{if (side _x != side this) then {this reveal [_x,4]}} forEach allUnits"];
+				//_Vwp1 setWaypointStatements ["true","{if (side _x != side this) then {this reveal [_x,4]}} forEach allUnits"];
 				if (_esMarcador) then
 					{
 
@@ -398,6 +387,7 @@ if (_base != "") then
 					_Vwp1 setWaypointBehaviour "COMBAT";
 					};
 				[_veh,"Inf Truck."] spawn A3A_fnc_inmuneConvoy;
+				_veh setUnloadInCombat [true, true];
 				};
 			}
 		else

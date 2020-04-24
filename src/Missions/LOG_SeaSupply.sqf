@@ -67,5 +67,6 @@ else
 	_nul = [_caja] call A3A_fnc_CSATcrate;
 	};
 [_caja] call A3A_fnc_AIvehInit;
+_caja call jn_fnc_logistics_addAction;
 ["LOG",[_texto,"Sea Supply",_nombredest],_posicion,"SUCCEEDED","rearm"] call A3A_fnc_taskUpdate;
 [1200,"LOG"] spawn A3A_fnc_borrarTask;

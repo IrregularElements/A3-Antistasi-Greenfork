@@ -1800,7 +1800,7 @@ switch _mode do {
 					//add new weapon
 					if (_item != "") then {
 						//give player new weapon
-						[player,_item,0] call bis_fnc_addweapon;
+						[player,_item,0] call A3A_fnc_addWeapon;
 						[_index, _item]call jn_fnc_arsenal_removeItem;
 
 						//Remove any attachments that spawn *with* the weapon.

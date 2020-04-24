@@ -2,7 +2,7 @@
 if (player != theBoss) exitWith {hint "Only our Commander has access to this function"};
 //if (!allowPlayerRecruit) exitWith {hint "Server is very loaded. \nWait one minute or change FPS settings in order to fulfill this request"};
 if (markerAlpha respawnBuenos == 0) exitWith {hint "You cant recruit a new squad while you are moving your HQ"};
-if (!([player] call A3A_fnc_hasRadio)) exitWith {if !(hayIFA) then {hint "You need a radio in your inventory to be able to give orders to other squads"} else {hint "You need a Radio Man in your group to be able to give orders to other squads"}};
+if (!([player] call A3A_fnc_hasRadio)) exitWith {};
 _chequeo = false;
 {
 	if (((side _x == muyMalos) or (side _x == malos)) and (_x distance petros < 500) and ([_x] call A3A_fnc_canFight) and !(isPlayer _x)) exitWith {_chequeo = true};
@@ -18,7 +18,7 @@ _exit = false;
 if (_tipoGrupo isEqualType "") then
 	{
 	if (_tipoGrupo == "not_supported") then {_exit = true; hint "The group or vehicle type you request is not supported in your modset"};
-	if (hayIFA and ((_tipoGrupo == SDKMortar) or (_tipoGrupo == SDKMGStatic)) and !debug) then {_exit = true; hint "The group or vehicle type you request is not supported in your modset"};
+	//if (hayIFA and ((_tipoGrupo == SDKMortar) or (_tipoGrupo == SDKMGStatic)) and !debug) then {_exit = true; hint "The group or vehicle type you request is not supported in your modset"};
 	};
 
 if (activeGREF) then
@@ -75,7 +75,7 @@ else
 		};
 	*/
 	};
-if ((_conMochis != "") and hayIFA) exitWith {hint "Your current modset does not support packing / unpacking static weapons"; garageVeh = nil};
+//if ((_conMochis != "") and hayIFA) exitWith {hint "Your current modset does not support packing / unpacking static weapons"; garageVeh = nil};
 
 if (_hr < _costeHR) then {_exit = true;hint format ["You do not have enough HR for this request (%1 required)",_costeHR]};
 
@@ -102,16 +102,33 @@ if (_esinf) then
 		if (_tipogrupo isEqualTo gruposSDKSentry) then {_format = "Stry-"};
 		if (_conMochis == "MG") then
 			{
-			((units _grupo) select ((count (units _grupo)) - 2)) addBackpackGlobal soporteStaticSDKB2;
-			((units _grupo) select ((count (units _grupo)) - 1)) addBackpackGlobal MGStaticSDKB;
+			if !(hayIFA) then
+				{
+				((units _grupo) select ((count (units _grupo)) - 2)) addBackpackGlobal soporteStaticSDKB2;
+				((units _grupo) select ((count (units _grupo)) - 1)) addBackpackGlobal MGStaticSDKB;
+				}
+			else
+				{
+				((units _grupo) select ((count (units _grupo)) - 2)) addWeapon soporteStaticSDKB2;
+				removeAllWeapons ((units _grupo) select ((count (units _grupo)) - 1));
+				((units _grupo) select ((count (units _grupo)) - 1)) addWeapon MGStaticSDKB;
+				};
 			_format = "SqMG-";
 			}
 		else
 			{
 			if (_conMochis == "Mortar") then
 				{
-				((units _grupo) select ((count (units _grupo)) - 2)) addBackpackGlobal soporteStaticSDKB3;
-				((units _grupo) select ((count (units _grupo)) - 1)) addBackpackGlobal MortStaticSDKB;
+				if !(hayIFA) then
+					{
+					((units _grupo) select ((count (units _grupo)) - 2)) addBackpackGlobal soporteStaticSDKB3;
+					((units _grupo) select ((count (units _grupo)) - 1)) addBackpackGlobal MortStaticSDKB;
+					}
+				else
+					{
+					((units _grupo) select ((count (units _grupo)) - 2)) addWeapon soporteStaticSDKB3;
+					((units _grupo) select ((count (units _grupo)) - 1)) addWeapon MortStaticSDKB;
+					};
 				_format = "SqMort-";
 				};
 			};

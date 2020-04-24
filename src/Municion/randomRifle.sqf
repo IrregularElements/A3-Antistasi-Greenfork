@@ -14,7 +14,7 @@ if (_rifleFinal in unlockedGL) then
 	{
 	_unit addMagazine ["1Rnd_HE_Grenade_shell", 3];
 	};
-[_unit, _rifleFinal, 5, 0] call BIS_fnc_addWeapon;
+[_unit, _rifleFinal, 5, 0] call A3A_fnc_addWeapon;
 
 if (count unlockedOptics > 0) then
 	{

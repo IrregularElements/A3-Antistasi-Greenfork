@@ -1,7 +1,8 @@
 private ["_display","_childControl"];
 _nul = createDialog "unit_recruit";
 
-sleep 1;
+//sleep 1;
+waitUntil {dialog};
 disableSerialization;
 
 _display = findDisplay 100;

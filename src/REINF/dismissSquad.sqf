@@ -53,19 +53,30 @@ if ([_unit] call A3A_fnc_canFight) then
 			deleteVehicle _veh;
 			};
 		};
-	_mochi = backpack _unit;
-	if (_mochi != "") then
-		{
-		switch (_mochi) do
-			{
-			case MortStaticSDKB: {_resourcesFIA = _resourcesFIA + ([SDKMortar] call A3A_fnc_vehiclePrice)};
-			case AAStaticSDKB: {_resourcesFIA = _resourcesFIA + ([staticAABuenos] call A3A_fnc_vehiclePrice)};
-			case MGStaticSDKB: {_resourcesFIA = _resourcesFIA + ([SDKMGStatic] call A3A_fnc_vehiclePrice)};
-			case ATStaticSDKB: {_resourcesFIA = _resourcesFIA + ([staticATBuenos] call A3A_fnc_vehiclePrice)};
-			};
-		};
 	{if (not(([_x] call BIS_fnc_baseWeapon) in unlockedWeapons)) then {_armas pushBack ([_x] call BIS_fnc_baseWeapon)}} forEach weapons _unit;
 	{if (not(_x in unlockedMagazines)) then {_municion pushBack _x}} forEach magazines _unit;
+	if !(hayIFA) then
+		{
+		_mochi = backpack _unit;
+		if (_mochi != "") then
+			{
+			switch (_mochi) do
+				{
+				case MortStaticSDKB: {_resourcesFIA = _resourcesFIA + ([SDKMortar] call A3A_fnc_vehiclePrice)};
+				case AAStaticSDKB: {_resourcesFIA = _resourcesFIA + ([staticAABuenos] call A3A_fnc_vehiclePrice)};
+				case MGStaticSDKB: {_resourcesFIA = _resourcesFIA + ([SDKMGStatic] call A3A_fnc_vehiclePrice)};
+				case ATStaticSDKB: {_resourcesFIA = _resourcesFIA + ([staticATBuenos] call A3A_fnc_vehiclePrice)};
+				};
+			};
+		}
+	else
+		{
+		if (secondaryWeapon _unit == MortStaticSDKB) then {_resourcesFIA = _resourcesFIA + ([SDKMortar] call A3A_fnc_vehiclePrice); _armas = _armas - [MortStaticSDKB]};
+		if (primaryWeapon _unit == MGStaticSDKB) then {_resourcesFIA = _resourcesFIA + ([SDKMGStatic] call A3A_fnc_vehiclePrice); _armas = _armas - [MGStaticSDKB]};
+		if (secondaryWeapon _unit == soporteStaticSDKB2) then {_armas = _armas - [soporteStaticSDKB2]};
+		if (secondaryWeapon _unit == soporteStaticSDKB3) then {_armas = _armas - [soporteStaticSDKB3]};
+		};
+
 	_items = _items + (items _unit) + (primaryWeaponItems _unit) + (assignedItems _unit) + (secondaryWeaponItems _unit) + [(hmd _unit),(headGear _unit),(vest _unit)];
 	};
 deleteVehicle _unit;

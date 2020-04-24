@@ -37,51 +37,75 @@ if ((_var isEqualTo "") or (_var isEqualTo "ATMan") or (_var isEqualTo "AAMan") 
 						private _ammo = gettext (configFile >> "CfgMagazines" >> _typeOfMags >> "ammo");
 						if ((getNumber (configfile >> "CfgAmmo" >> _ammo >> "airLock")) != 2) then {_result = "ATMan"} else {_result = "AAMan"};
 						};
+					}
+				else
+					{
+					if (hayIFA) then
+						{
+						switch (secondaryWeapon _unit) do
+							{
+							case soporteStaticSDKB2: {_result = "StaticBase"};
+							case MortStaticSDKB: {_result = "StaticMortar"};
+							case soporteStaticSDKB3: {_result = "StaticBase"};
+							case soporteStaticNATOB2: {_result = "StaticBase"};
+							case MortStaticNATOB: {_result = "StaticMortar"};
+							case soporteStaticNATOB3: {_result = "StaticBase"};
+							case MortStaticCSATB: {_result = "StaticMortar"};
+							case soporteStaticCSATB3: {_result = "StaticBase"};
+							};
+						};
 					};
 				}
 			else
 				{
-				_arma = [primaryWeapon _unit] call BIS_fnc_baseWeapon;
-				if (_arma in mguns) then
+				if (hayIFA and {primaryWeapon _unit in [MGStaticSDKB,MGStaticNATOB]}) then
 					{
-					_result = "MGMan"
+					_result = "StaticGunner";
 					}
 				else
 					{
-					if (_arma in srifles) then
+					_arma = [primaryWeapon _unit] call BIS_fnc_baseWeapon;
+					if (_arma in mguns) then
 						{
-						_result = "Sniper";
+						_result = "MGMan"
 						}
 					else
 						{
-						if (backpack _unit != "") then
+						if (_arma in srifles) then
 							{
-							_backpack = backpack _unit;
-							if (isClass (configFile >> "cfgVehicles" >> _backpack >> "assembleInfo")) then
-								{
-								_weapon = (gettext (configFile >> "cfgVehicles" >> _backpack >> "assembleInfo" >> "assembleTo"));
-								if (_weapon != "") then
-									{
-									_result = if (_weapon isKindOf "StaticMortar") then {"StaticMortar"} else {"StaticGunner"};
-									}
-								else
-									{
-									_result = "StaticBase";
-									};
-								};
+							_result = "Sniper";
 							}
 						else
 							{
-							if (vehicle _unit isKindOf "StaticWeapon") then
+							if (backpack _unit != "") then
 								{
-								_weapon = vehicle _unit;
-								if (_weapon isKindOf "StaticMortar") then
+								_backpack = backpack _unit;
+								if (isClass (configFile >> "cfgVehicles" >> _backpack >> "assembleInfo")) then
 									{
-									_result = "StaticMortar";
-									}
-								else
+									_weapon = (gettext (configFile >> "cfgVehicles" >> _backpack >> "assembleInfo" >> "assembleTo"));
+									if (_weapon != "") then
+										{
+										_result = if (_weapon isKindOf "StaticMortar") then {"StaticMortar"} else {"StaticGunner"};
+										}
+									else
+										{
+										_result = "StaticBase";
+										};
+									};
+								}
+							else
+								{
+								if (vehicle _unit isKindOf "StaticWeapon") then
 									{
-									_result = "StaticGunner";
+									_weapon = vehicle _unit;
+									if (_weapon isKindOf "StaticMortar") then
+										{
+										_result = "StaticMortar";
+										}
+									else
+										{
+										_result = "StaticGunner";
+										};
 									};
 								};
 							};

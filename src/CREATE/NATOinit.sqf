@@ -8,7 +8,7 @@ if (typeOf _unit == "Fin_random_F") exitWith {};
 _lado = side _unit;
 //_unit setVariable ["lado",_lado];
 _unit addEventHandler ["HandleDamage",A3A_fnc_handleDamageAAF];
-
+if (_tipo in needToRedress) then {[_unit,_tipo] call A3A_fnc_modAIRedress};
 _unit addEventHandler ["killed",A3A_fnc_AAFKilledEH];
 if (count _this > 1) then
 	{
@@ -90,7 +90,7 @@ else
 			_magazines = getArray (configFile / "CfgWeapons" / _rifleFinal / "magazines");
 			{_unit removeMagazines _x} forEach _magazines;
 			_unit removeWeaponGlobal (_rifleFinal);
-			if (tierWar < 5) then {[_unit, "arifle_MX_Black_F", 6, 0] call BIS_fnc_addWeapon} else {[_unit, "arifle_AK12_F", 6, 0] call BIS_fnc_addWeapon};
+			if (tierWar < 5) then {[_unit, "arifle_MX_Black_F", 6, 0] call A3A_fnc_addWeapon} else {[_unit, "arifle_AK12_F", 6, 0] call A3A_fnc_addWeapon};
 			_unit selectWeapon (primaryWeapon _unit);
 			};
 		};
@@ -194,6 +194,13 @@ if !(hayIFA) then
 				_unit enableGunLights "AUTO";
 				_unit setskill ["spotDistance",_skill - 0.2];
 				_unit setskill ["spotTime",_skill - 0.2];
+				}
+			else
+				{
+				_unit setskill ["spotDistance",_skill - 0.4];
+				_unit setskill ["spotTime",_skill - 0.4];
+				_aiming = _unit skill "aimingAccuracy";
+				_unit setSkill ["aimingAccuracy",_aiming - 0.2];
 				};
 			};
 		}
@@ -224,6 +231,17 @@ if !(hayIFA) then
 else
 	{
 	_unit unlinkItem "ItemRadio";
+	if !(hayACEMedical) then
+		{
+		if !("FirstAidKit" in (items _unit)) then {_unit addItemToUniform "FirstAidKit"};
+		};
+	if (sunOrMoon < 1) then
+		{
+		_unit setskill ["spotDistance",_skill - 0.4];
+		_unit setskill ["spotTime",_skill - 0.4];
+		_aiming = _unit skill "aimingAccuracy";
+		_unit setSkill ["aimingAccuracy",_aiming - 0.2];
+		};
 	};
 _revelar = false;
 if (vehicle _unit != _unit) then

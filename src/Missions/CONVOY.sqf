@@ -109,14 +109,14 @@ switch (_tipoConvoy) do
 		_texto = format ["A truck plenty of money is being moved from %1 to %4, and it's about to depart at %2:%3. Steal that truck and bring it to HQ. Those funds will be very welcome.",_nombreorig,numberToDate [2035,_fechalimnum] select 3,numberToDate [2035,_fechalimnum] select 4,_nombredest];
 		_taskTitle = "Money Convoy";
 		_taskIcon = "move";
-		_tipoVehObj = "C_Van_01_box_F";
+		_tipoVehObj = if !(hayIFA) then {"C_Van_01_box_F"} else {"LIB_GazM1"};
 		};
 	case "Supplies":
 		{
 		_texto = format ["A truck with medical supplies destination %4 it's about to depart at %2:%3 from %1. Steal that truck bring it to %4 and let people in there know it is %5 who's giving those supplies.",_nombreorig,numberToDate [2035,_fechalimnum] select 3,numberToDate [2035,_fechalimnum] select 4,_nombredest,nameBuenos];
 		_taskTitle = "Supply Convoy";
 		_taskIcon = "heal";
-		_tipoVehObj = "C_Van_01_box_F";
+		_tipoVehObj = if !(hayIFA) then {"C_Van_01_box_F"} else {"LIB_GazM1"};
 		};
 	};
 

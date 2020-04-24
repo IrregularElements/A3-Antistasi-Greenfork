@@ -47,6 +47,23 @@ if (side _injurer == buenos) then
 					{
 					_unit setVariable ["cancelRevive",true];
 					};
+				if (sunOrMoon < 1) then
+					{
+					if !(haveNV) then
+						{
+						if (hayIFA) then
+							{
+							_lider = leader _grupo;
+							if (([_lider] call A3A_fnc_canFight) and ((typeOf _lider) in squadLeaders)) then {[_lider,_lider] call A3A_fnc_useFlares}
+							}
+						else
+							{
+							{
+							[_x,_x] call A3A_fnc_useFlares;
+							} forEach ((units grupo) select {(_x getVariable ["typeOfSoldier",""] == "Normal") and (count (getArray (configfile >> "CfgWeapons" >> primaryWeapon _x >> "muzzles")) == 2)});
+							};
+						};
+					};
 				};
 			if (_dam > 0.6) then {[_unit,_injurer] spawn A3A_fnc_unitGetToCover};
 			};

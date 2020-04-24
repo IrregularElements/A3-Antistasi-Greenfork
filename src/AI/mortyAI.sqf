@@ -43,9 +43,21 @@ while {(alive _morty0) and (alive _morty1)} do
 				{
 				_mortero setDir (getDir _morty0);
 				};
+			}
+		else
+			{
+			if (hayIFA and _tipo == SDKMGStatic) then {_mortero setDir (getDir _morty0)};
 			};
-		removeBackpackGlobal _morty0;
-		removeBackpackGlobal _morty1;
+		if !(hayIFA) then
+			{
+			removeBackpackGlobal _morty0;
+			removeBackpackGlobal _morty1;
+			}
+		else
+			{
+			_morty0 removeWeaponGlobal _b0;
+			_morty1 removeWeaponGlobal _b1;
+			};
 		_grupo addVehicle _mortero;
 		_morty1 assignAsGunner _mortero;
 		[_morty1] orderGetIn true;
@@ -57,11 +69,20 @@ while {(alive _morty0) and (alive _morty1)} do
 		if (({(alive _x)} count units _grupo == count units _grupo) and !(unitReady _morty0)) then
 			{
 			if (vehicle _morty0 != _morty0) then {_morty0 forcespeed 0};
-			_morty0 addBackpackGlobal _b0;
-			_morty1 addBackpackGlobal _b1;
 			unassignVehicle _morty1;
 			moveOut _morty1;
 			deleteVehicle _mortero;
+			if !(hayIFA) then
+				{
+				_morty0 addBackpackGlobal _b0;
+				_morty1 addBackpackGlobal _b1;
+				}
+			else
+				{
+				_morty0 addWeaponGlobal _b0;
+				_morty1 addWeaponGlobal _b1;
+				};
+
 			if (vehicle _morty0 != _morty0) then
 				{
 				waitUntil {sleep 1;(vehicle _morty0 == vehicle _morty1) or !(alive _morty0) or !(alive _morty1)};

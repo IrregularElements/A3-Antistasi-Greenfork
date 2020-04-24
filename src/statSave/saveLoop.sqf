@@ -98,16 +98,24 @@ if ((_amigo getVariable ["spawner",false]) and (side group _amigo == buenos))the
 		if (((isPlayer leader _amigo) and (!isMultiplayer)) or (group _amigo in (hcAllGroups theBoss)) and (not((group _amigo) getVariable ["esNATO",false]))) then
 			{
 			_resfondo = _resfondo + (server getVariable [(typeOf _amigo),0]);
-			_mochi = backpack _amigo;
-			if (_mochi != "") then
+			if !(hayIFA) then
 				{
-				switch (_mochi) do
+				_mochi = backpack _amigo;
+				if (_mochi != "") then
 					{
-					case MortStaticSDKB: {_resfondo = _resfondo + ([SDKMortar] call A3A_fnc_vehiclePrice)};
-					case AAStaticSDKB: {_resfondo = _resfondo + ([staticAABuenos] call A3A_fnc_vehiclePrice)};
-					case MGStaticSDKB: {_resfondo = _resfondo + ([SDKMGStatic] call A3A_fnc_vehiclePrice)};
-					case ATStaticSDKB: {_resfondo = _resfondo + ([staticATBuenos] call A3A_fnc_vehiclePrice)};
+					switch (_mochi) do
+						{
+						case MortStaticSDKB: {_resfondo = _resfondo + ([SDKMortar] call A3A_fnc_vehiclePrice)};
+						case AAStaticSDKB: {_resfondo = _resfondo + ([staticAABuenos] call A3A_fnc_vehiclePrice)};
+						case MGStaticSDKB: {_resfondo = _resfondo + ([SDKMGStatic] call A3A_fnc_vehiclePrice)};
+						case ATStaticSDKB: {_resfondo = _resfondo + ([staticATBuenos] call A3A_fnc_vehiclePrice)};
+						};
 					};
+				}
+			else
+				{
+				if (secondaryWeapon _amigo == MortStaticSDKB) then {_resfondo = _resfondo + ([SDKMortar] call A3A_fnc_vehiclePrice)};
+				if (primaryWeapon _amigo == MGStaticSDKB) then {_resfondo = _resfondo + ([SDKMGStatic] call A3A_fnc_vehiclePrice)};
 				};
 			if (vehicle _amigo != _amigo) then
 				{

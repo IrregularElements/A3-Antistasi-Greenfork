@@ -1,10 +1,6 @@
 _pos = _this select 0;
 if (isNil "_pos") exitWith {};
 if (count _pos == 0) exitWith {};
-if (isServer) then
-	{
-	if (!napalmCurrent) then {napalmCurrent = true; publicVariable "napalmCurrent"};
-	};
 if (hasInterface) then
 	{
 	_slight6 = "#lightpoint" createVehicleLocal [ _pos select 0, _pos select 1, 10];
@@ -113,5 +109,5 @@ else
 if (isServer) then
 	{
 	sleep 85;
-	if (napalmCurrent) then {napalmCurrent = false; publicVariable "napalmCurrent"};
+	napalmCurrent = false; publicVariable "napalmCurrent";
 	};

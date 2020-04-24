@@ -70,6 +70,7 @@ if !(_objeto isKindOf "House") then
 			};
 		};
 	};
-//_posEnemigo = position _enemigo;
 _pos = _enemigo getPos [(_objeto distance _enemigo) + 2, _enemigo getDir _objeto];
+_unitNear = _pos nearEntities [["CAManBase","STATICWEAPON"],1];
+If !(_unitNear isEqualTo []) exitwith {[]};
 _pos

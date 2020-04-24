@@ -343,7 +343,7 @@ for "_i" from 0 to (count _garrison - 1) do
 		};
 	};
 
-if (_marcador in puertos) then
+if ((_marcador in puertos) and !hayIFA) then
 	{
 	_caja addItemCargo ["V_RebreatherIA",round random 5];
 	_caja addItemCargo ["G_I_Diving",round random 5];

@@ -10,10 +10,10 @@ staticCrewMalos = "LIB_GER_gun_crew";
 NATOmedic = "LIB_GER_medic";
 NATOAA = "LIB_GER_stggunner";
 NATOAT = "LIB_GER_AT_soldier";
-NATOMortarMan = "";
+NATOMortarMan = "B_support_Mort_F";
 NATOEngineer = "LIB_GER_sapper";
-NATOMGSupp = "";
-NATOMortSupp = "";
+NATOMGSupp = "B_support_AMG_F";
+NATOMortSupp = "B_support_AMort_F";
 
 NATOMG = "LIB_MG42_Lafette_Deployed";
 NATOMortar = "LIB_GrWr34_g";
@@ -52,29 +52,29 @@ NATOAmmobox = "B_supplyCrate_F";
 gruposNATOSentry = ["LIB_GER_Soldier3_base","LIB_GER_ober_rifleman"];//"B_T_InfSentry";//
 gruposNATOSniper = ["LIB_GER_scout_sniper","LIB_GER_soldier_camo5_base"];
 gruposNATOsmall = [gruposNATOSentry,gruposNATOSniper]; //[gruposNATOSentry,"B_T_SniperTeam","B_T_ReconSentry"];///
-gruposNATOAA = ["LIB_GER_unterofficer",NATOAA,NATOAA,"LIB_GER_mgunner"];
-gruposNATOAT = ["LIB_GER_unterofficer",NATOAT,NATOAT,"LIB_GER_mgunner"];
+gruposNATOAA = ["LIB_GER_unterofficer",NATOAA,NATOAA,"LIB_GER_radioman"];
+gruposNATOAT = ["LIB_GER_unterofficer",NATOAT,NATOAT,"LIB_GER_radioman"];
 gruposNATOmid = [["LIB_GER_unterofficer","LIB_GER_mgunner","LIB_GER_scout_ober_rifleman","LIB_GER_AT_grenadier"],gruposNATOAA,gruposNATOAT];//["B_T_InfTeam","B_T_InfTeam_AA","B_T_InfTeam_AT"];///
-NATOSquad = ["LIB_GER_unterofficer","LIB_GER_mgunner","LIB_GER_Soldier2_base","LIB_GER_scout_ober_rifleman",NATOAA,NATOAT,"LIB_GER_AT_grenadier",NATOmedic];
+NATOSquad = ["LIB_GER_unterofficer","LIB_GER_mgunner","LIB_GER_Soldier2_base","LIB_GER_scout_ober_rifleman",NATOAA,NATOAT,"LIB_GER_radioman",NATOmedic];
 
 NATOSquadAA = NATOSquad;
-NATOSquadMortar = [];
-NATOSquadMG = [];
-NATOSquadEng = ["LIB_GER_unterofficer","LIB_GER_mgunner","LIB_GER_smgunner","LIB_GER_AT_grenadier","LIB_GER_ober_rifleman",NATOEngineer,NATOEngineer,NATOmedic];
-NATOSquadAT = ["LIB_GER_unterofficer","LIB_GER_mgunner","LIB_GER_Soldier2_base","LIB_GER_scout_ober_rifleman",NATOAT,NATOAT,"LIB_GER_AT_grenadier",NATOmedic];
+NATOSquadMortar = ["LIB_GER_unterofficer","LIB_GER_mgunner","LIB_GER_Soldier2_base","LIB_GER_scout_ober_rifleman",NATOMortarMan,NATOMortSupp,"LIB_GER_radioman",NATOmedic];
+NATOSquadMG = ["LIB_GER_unterofficer","LIB_GER_mgunner","LIB_GER_Soldier2_base","LIB_GER_scout_ober_rifleman",staticCrewMalos,NATOMGSupp,"LIB_GER_radioman",NATOmedic];
+NATOSquadEng = ["LIB_GER_unterofficer","LIB_GER_mgunner","LIB_GER_smgunner","LIB_GER_AT_grenadier","LIB_GER_ober_rifleman",NATOEngineer,"LIB_GER_radioman",NATOmedic];
+NATOSquadAT = ["LIB_GER_unterofficer","LIB_GER_mgunner","LIB_GER_Soldier2_base","LIB_GER_scout_ober_rifleman",NATOAT,NATOAT,"LIB_GER_radioman",NATOmedic];
 
-NATOSpecOp = ["LIB_FSJ_NCO","LIB_FSJ_Mgunner","LIB_FSJ_Soldier_2","LIB_FSJ_AT_soldier","LIB_FSJ_Soldier_2","LIB_FSJ_sapper","LIB_FSJ_Sniper","LIB_FSJ_medic"];
-gruposNATOSquad = [NATOSquad,NATOSquadAA,NATOSquadEng,NATOSquadAT]; //[NATOSquad,"B_T_InfSquad_Weapons"];///
+NATOSpecOp = ["LIB_FSJ_NCO","LIB_FSJ_Mgunner","LIB_FSJ_Soldier_2","LIB_FSJ_AT_soldier","LIB_FSJ_Soldier_2","LIB_FSJ_sapper","LIB_FSJ_radioman","LIB_FSJ_medic"];
+gruposNATOSquad = [NATOSquad,NATOSquadAA,NATOSquadEng,NATOSquadAT,NATOSquadMortar,NATOSquadMG]; //[NATOSquad,"B_T_InfSquad_Weapons"];///
 factionMachoMalos = "LIB_FSJ";
 
 
 soporteStaticNATOB = "not_supported";
 ATStaticNATOB = "not_supported";
-MGStaticNATOB = "not_supported";
-soporteStaticNATOB2 = "not_supported";
+MGStaticNATOB = "LIB_MG42";//primary
+soporteStaticNATOB2 = "LIB_Laffete_Tripod";//secondary
 AAStaticNATOB = "not_supported";
-MortStaticNATOB = "not_supported";
-soporteStaticNATOB3 = "not_supported";
+MortStaticNATOB = "LIB_GrWr34_Barrel_g";//secondary
+soporteStaticNATOB3 = "LIB_GrWr34_Tripod_g";//secondary
 
 armasNATO append ["LIB_MP40","LIB_MP44","LIB_K98","LIB_G43","LIB_MG42","LIB_MP40","LIB_K98ZF39","LIB_RPzB","LIB_M1908"];//
 municionNATO append ["LIB_32Rnd_9x19","LIB_NB39","LIB_30Rnd_792x33","LIB_Shg24","LIB_5Rnd_792x57","LIB_10Rnd_792x57","LIB_50Rnd_792x57","LIB_1Rnd_RPzB","LIB_8Rnd_9x19_P08","LIB_Pwm"];//possible ammo that spawn in NATO ammoboxes
@@ -84,3 +84,4 @@ nameMalos = "Wehrmacht";
 if (isServer) then {"NATO_carrier" setMarkerText "Wehrmacht Reinforcements"};
 
 {cascos pushBackUnique (getUnitLoadout _x select 6)} forEach NATOSquad;
+needToRedress append [NATOUnarmed,staticCrewMalos,NATOMortarMan,NATOMGSupp,NATOMortSupp];

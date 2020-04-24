@@ -80,7 +80,7 @@ while {(_waves > 0)} do
 		if (_posOrigen distance _posDestino < distanceForLandAttack) then
 			{
 			_indice = aeropuertos find _mrkOrigen;
-			_spawnPoint = spawnPoints select _indice;
+			_spawnPoint = if (_indice != -1) then {spawnPoints select _indice} else {_mrkOrigen};
 			_pos = getMarkerPos _spawnPoint;
 			_posOrigenLand = _posOrigen;
 			_dir = markerDir _spawnPoint;
@@ -216,6 +216,7 @@ while {(_waves > 0)} do
 						_Vwp1 setWaypointBehaviour "COMBAT";
 						_veh allowCrewInImmobile true;
 						[_veh,"APC"] spawn A3A_fnc_inmuneConvoy;
+						_veh setUnloadInCombat [true, false];
 						}
 					else
 						{
@@ -232,6 +233,7 @@ while {(_waves > 0)} do
 						_Vwp1 = _grupoVeh addWaypoint [_posDestino, count (wayPoints _grupoVeh)];
 						_Vwp1 setWaypointType "SAD";
 						[_veh,"Inf Truck."] spawn A3A_fnc_inmuneConvoy;
+						_veh setUnloadInCombat [true, true];
 						};
 					}
 				else

@@ -108,7 +108,18 @@ _wp1 setWaypointType "MOVE";
 _wp1 setWaypointSpeed "LIMITED";
 _wp1 setWaypointBehaviour "CARELESS";
 _plane setCollisionLight true;
-if ((_tipo == "NAPALM") and (napalmCurrent)) then {_tipo = "CLUSTER"};
+if (_tipo == "NAPALM") then
+	{
+	if (napalmCurrent) then
+		{
+		_tipo = "CLUSTER";
+		}
+	else
+		{
+		napalmCurrent = true;
+		publicVariable "napalmCurrent";
+		};
+	};
 if (_tipo == "HE") then {_wp1 setWaypointStatements ["true", "[this,""HE""] execVM 'AI\airbomb.sqf'"]} else {if (_tipo == "NAPALM") then {_wp1 setWaypointStatements ["true", "[this,""NAPALM""] execVM 'AI\airbomb.sqf'"]} else {_wp1 setWaypointStatements ["true", "[this,""CLUSTER""] execVM 'AI\airbomb.sqf'"]}};
 
 _wp2 = _grupoplane addWaypoint [_pos2, 1];
@@ -132,4 +143,4 @@ else
 	};
 {deleteVehicle _x} forEach _planeCrew;
 deleteGroup _grupoplane;
-
+if (napalmCurrent) then {napalmCurrent = false; publicVariable "napalmCurrent"};

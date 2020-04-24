@@ -2,7 +2,7 @@ private ["_tipo","_coste","_posicionTel","_cantidad","_cantidadMax"];
 
 if (["Mines"] call BIS_fnc_taskExists) exitWith {hint "We can only deploy one minefield at a time."};
 
-if (!([player] call A3A_fnc_hasRadio)) exitWith {if !(hayIFA) then {hint "You need a radio in your inventory to be able to give orders to other squads"} else {hint "You need a Radio Man in your group to be able to give orders to other squads"}};
+if (!([player] call A3A_fnc_hasRadio)) exitWith {hint "You cannot issue your required commands as there is no radio cover for proper comms. Head to one of your garrison surroundings with owned RT nearby (Outposts - Seaports - Airbases) or to your HQ surroundings in order to be able to issue orders"};
 
 _tipo = _this select 0;
 

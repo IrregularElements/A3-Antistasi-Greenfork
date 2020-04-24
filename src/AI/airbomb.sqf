@@ -14,8 +14,14 @@ if (_tipo != "HE") then
 	if (_tipo == "NAPALM") then {_cuenta = 24} else {_cuenta = 48; _carpet = true};
 	_cluster = true;
 	};
-if (typeOf _plane == vehSDKPlane) then {_cuenta = round (_cuenta / 2)};
-sleep random 5;
+_bonus = if (hayIFA) then {1.5} else {0};
+
+if (typeOf _plane == vehSDKPlane) then
+	{
+	_cuenta = round (_cuenta / 2);
+	if !(hayIFA) then {_bonus = 1};
+	};
+sleep (random 5) + _bonus;
 _sleep = if (!_cluster) then {0.6} else {if (!_carpet) then {0.1} else {0.05}};
 
 for "_i" from 1 to _cuenta do

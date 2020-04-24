@@ -1,12 +1,14 @@
 Index: A3-Antistasi-Greenfork/src/description.ext
 ===================================================================
---- A3-Antistasi-Greenfork.orig/src/description.ext	2020-04-21 20:50:48.417616191 +0000
-+++ A3-Antistasi-Greenfork/src/description.ext	2020-04-21 20:52:28.487325226 +0000
-@@ -2,10 +2,10 @@
+--- A3-Antistasi-Greenfork.orig/src/description.ext	2020-04-24 15:44:46.727068887 +0000
++++ A3-Antistasi-Greenfork/src/description.ext	2020-04-24 15:45:03.497995116 +0000
+@@ -1,11 +1,11 @@
+ #include "defines.hpp"
  #include "dialogs.hpp"
  
- __EXEC(upstreamVersion = "1.5.0");
+-__EXEC(upstreamVersion = "1.5.0");
 -__EXEC(downstreamVersion = "2020-03-01");
++__EXEC(upstreamVersion = "1.5.1");
 +__EXEC(downstreamVersion = "2020-04-21");
  
  author="Barbolani";
@@ -17,14 +19,14 @@ Index: A3-Antistasi-Greenfork/src/description.ext
  
 Index: A3-Antistasi-Greenfork/src/mission.sqm
 ===================================================================
---- A3-Antistasi-Greenfork.orig/src/mission.sqm	2020-04-21 20:46:08.465430217 +0000
-+++ A3-Antistasi-Greenfork/src/mission.sqm	2020-04-21 20:51:52.961428523 +0000
+--- A3-Antistasi-Greenfork.orig/src/mission.sqm	2020-04-24 15:41:50.888833063 +0000
++++ A3-Antistasi-Greenfork/src/mission.sqm	2020-04-24 15:45:17.076935282 +0000
 @@ -153,7 +153,7 @@
  {
  	class Intel
  	{
 -		briefingName="A3-Antistasi Altis";
-+		briefingName="A3-Antistasi Altis 1.5.0 2020-04-21";
++		briefingName="A3-Antistasi Altis 1.5.1 2020-04-21";
  		overviewText="Build FIA Army from scratch and defeat the AAF and CSAT forces in a whole map Dynamic Mission.";
  		resistanceWest=0;
  		startWeather=0;

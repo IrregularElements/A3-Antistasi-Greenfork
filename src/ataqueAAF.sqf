@@ -44,11 +44,12 @@ if !(_tmpTargets isEqualTo []) then
 	};
 } forEach _aeropuertos;
 //the following discards targets which are surrounded by friendly zones, excluding airbases and the nearest targets
-_objetivosProv = _objetivos - aeropuertos - _nearestObjectives;
+//test: exclude cities in order to guarantee cities are a target no matter what
+_objetivosProv = _objetivos - aeropuertos - _nearestObjectives - ciudades;
 {
 _posObj = getMarkerPos _x;
 _ladoObj = lados getVariable [_x,sideUnknown];
-if (((marcadores - controles - ciudades - puestosFIA) select {lados getVariable [_x,sideUnknown] != _ladoObj}) findIf {getMarkerPos _x distance2D _posObj < 2000} == -1) then {_objetivos = _objetivos - [_x]};
+if (((marcadores - controles - ciudades - puestosFIA) select {lados getVariable [_x,sideUnknown] != _ladoObj}) findIf {getMarkerPos _x distance2D _posObj < distanciaSPWN} == -1) then {_objetivos = _objetivos - [_x]};
 } forEach _objetivosProv;
 diag_log format ["Después de la limpieza, estos son los objetivos: %1",_objetivos];
 if (_objetivos isEqualTo []) exitWith {};
@@ -98,17 +99,13 @@ if !(_tmpObjetivos isEqualTo []) then
 	_cercano = [_tmpObjetivos,_base] call BIS_fnc_nearestPosition;
 	{
 	diag_log format ["Analizando %1",_x];
-	_esCiudad = if (_x in ciudades) then {true} else {false};
+	_esCiudad = (_x in ciudades);
 	_proceder = true;
 	_posSitio = getMarkerPos _x;
-	_esSDK = false;
+	_esSDK = (lados getVariable [_x,sideUnknown] == buenos);
 	_isTheSameIsland = [_x,_base] call A3A_fnc_isTheSameIsland;
 	if ([_x,true] call A3A_fnc_fogCheck >= 0.3) then
 		{
-		if (lados getVariable [_x,sideUnknown] == buenos) then
-			{
-			_esSDK = true;
-			};
 		if (!_isTheSameIsland and (not(_x in aeropuertos))) then
 			{
 			if (!_esSDK) then {_proceder = false};
@@ -138,11 +135,13 @@ if !(_tmpObjetivos isEqualTo []) then
 							_cuenta = ((count _garrison) + (count _puestos) + (2*(count _estaticas)));
 							if (_cuenta <= 8) then
 								{
-								if (!hayIFA or (_posSitio distance _posBase < distanceForLandAttack)) then
+								_puestos = puestos select {(lados getVariable [_x,sideUnknown] == _ladoBase) and (getMarkerPos _x distance2D _posSitio < distanceForLandAttack) and ([_posSitio,getMarkerPos _x] call A3A_fnc_isTheSameIsland) and ([_x,true] call A3A_fnc_airportCanAttack)};
+								if !(_puestos isEqualTo []) then
 									{
 									diag_log "No se procede por ser fácil";
+									_puestoFinal = [_puestos,_posSitio] call BIS_fnc_nearestPosition;
 									_proceder = false;
-									_faciles pushBack [_sitio,_base];
+									_faciles pushBack [_sitio,_puestoFinal];
 									_facilesArr pushBackUnique _sitio;
 									};
 								};
@@ -327,10 +326,9 @@ if !(_tmpObjetivos isEqualTo []) then
 if (count _faciles == 4) exitWith {};
 } forEach _aeropuertos;
 diag_log format ["Salimos porque hay los siguientes fáciles %1",_faciles];
-if (count _faciles == 4) exitWith
-	{
-	{[[_x select 0,_x select 1,"",false],"A3A_fnc_patrolCA"] remoteExec ["A3A_fnc_scheduler",2];sleep 30} forEach _faciles;
-	};
+{[[_x select 0,_x select 1,"",false],"A3A_fnc_patrolCA"] remoteExec ["A3A_fnc_scheduler",2];sleep 30} forEach _faciles;
+if (count _faciles > 2) exitWith {};
+
 if (hayIFA and (sunOrMoon < 1)) exitWith {};
 if ((count _objetivosFinal > 0) and (count _faciles < 3)) then
 	{
@@ -375,7 +373,7 @@ if ((count _objetivosFinal > 0) and (count _faciles < 3)) then
 				};
 			};
 		};
-	if ((!isMultiplayer) and (_waves > 4)) then {_waves = 4};
+	if ((!isMultiplayer) and (_waves > 3)) then {_waves = 3};
 	if (not(_destino in ciudades)) then
 		{
 		///[[_destino,_origen,_waves],"A3A_fnc_wavedCA"] call A3A_fnc_scheduler;
