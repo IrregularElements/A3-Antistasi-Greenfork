@@ -9,9 +9,11 @@ NEW_VER_FORK="${1-$(date -I)}"
 SRCDIR="${SRCDIR-src}"
 
 export QUILT_PATCH_OPTS="--binary"
+QUILT_TOP="$(quilt top || echo)"
 quilt push -f 99-version.patch
 VER_FORK="${VER_FORK-$(grep -Po '(?<=downstreamVersion = ")[^"]+' src/description.ext)}"
-quilt pop -af
+# shellcheck disable=SC2086
+quilt pop -af $QUILT_TOP
 
 if [[ -z $VER_FORK || -z $NEW_VER_FORK ]] ; then
   echo "[!] Empty version: VER_FORK=\"$VER_FORK\" NEW_VER_FORK=\"$NEW_VER_FORK\"" 1>&2
