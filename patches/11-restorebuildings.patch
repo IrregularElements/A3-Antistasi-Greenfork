@@ -360,15 +360,15 @@ Index: A3-Antistasi-Greenfork/src/isMilitaryBuilding.sqf
 +_isMilitary;
 Index: A3-Antistasi-Greenfork/src/init.sqf
 ===================================================================
---- A3-Antistasi-Greenfork.orig/src/init.sqf	2020-04-07 22:55:01.177498119 +0000
-+++ A3-Antistasi-Greenfork/src/init.sqf	2020-04-17 20:33:57.592448044 +0000
+--- A3-Antistasi-Greenfork.orig/src/init.sqf	2020-05-16 13:29:09.343862676 +0000
++++ A3-Antistasi-Greenfork/src/init.sqf	2020-05-16 13:36:01.726515384 +0000
 @@ -60,8 +60,13 @@
              if (_this select 2) then
                  {
                  destroyedBuildings pushBack (getPosATL _building);
 +                } else {
-+                if(damage _this != 0) then {
-+                    destroyedBuildings deleteAt (destroyedBuildings findIf {_this distance2D _x < 1});
++                if(damage _building == 0) then {
++                    destroyedBuildings deleteAt (destroyedBuildings findIf {_building distance2D _x < 1});
 +                };
                  };
              };
@@ -378,15 +378,15 @@ Index: A3-Antistasi-Greenfork/src/init.sqf
      if (buenos == independent) then {deleteMarker "respawn_west"} else {deleteMarker "respawn_guerrila"};
 Index: A3-Antistasi-Greenfork/src/initServer.sqf
 ===================================================================
---- A3-Antistasi-Greenfork.orig/src/initServer.sqf	2020-04-17 20:29:10.448377612 +0000
-+++ A3-Antistasi-Greenfork/src/initServer.sqf	2020-04-17 20:32:00.580828744 +0000
+--- A3-Antistasi-Greenfork.orig/src/initServer.sqf	2020-05-16 13:35:20.601649741 +0000
++++ A3-Antistasi-Greenfork/src/initServer.sqf	2020-05-16 13:35:40.036586246 +0000
 @@ -151,8 +151,13 @@
              if (_this select 2) then
                  {
                  destroyedBuildings pushBack (getPosATL _building);
 +                } else {
-+                if(damage _this != 0) then {
-+                    destroyedBuildings deleteAt (destroyedBuildings findIf {_this distance2D _x < 1});
++                if(damage _building == 0) then {
++                    destroyedBuildings deleteAt (destroyedBuildings findIf {_building distance2D _x < 1});
 +                };
                  };
              };
