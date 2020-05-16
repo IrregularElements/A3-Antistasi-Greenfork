@@ -55,7 +55,7 @@ Index: A3-Antistasi-Greenfork/src/initPlayerLocal.sqf
 Index: A3-Antistasi-Greenfork/src/refreshCargoActions.sqf
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ A3-Antistasi-Greenfork/src/refreshCargoActions.sqf	2020-04-07 22:53:54.016698945 +0000
++++ A3-Antistasi-Greenfork/src/refreshCargoActions.sqf	2020-05-16 21:14:43.031556536 +0000
 @@ -0,0 +1,57 @@
 +params ["_unit", ["_distance", 50]];
 +
@@ -75,7 +75,7 @@ Index: A3-Antistasi-Greenfork/src/refreshCargoActions.sqf
 +
 +_cargoActions = [];
 +
-+private _checkedVehicles = nearestObjects [_unit, ["LandVehicle", "Helicopter"], _distance];
++private _checkedVehicles = nearestObjects [_unit, ["LandVehicle", "Helicopter", "Plane"], _distance];
 +
 +private _newActionCount = 0;
 +
