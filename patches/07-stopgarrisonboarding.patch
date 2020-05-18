@@ -1,7 +1,7 @@
 Index: A3-Antistasi-Greenfork/src/Scripts/UPSMON/COMMON/vehicles/fnc/UPSMON_GetNearestVehicles.sqf
 ===================================================================
---- A3-Antistasi-Greenfork.orig/src/Scripts/UPSMON/COMMON/vehicles/fnc/UPSMON_GetNearestVehicles.sqf	2020-04-03 10:42:48.897696582 +0000
-+++ A3-Antistasi-Greenfork/src/Scripts/UPSMON/COMMON/vehicles/fnc/UPSMON_GetNearestVehicles.sqf	2020-04-04 19:24:08.677755184 +0000
+--- A3-Antistasi-Greenfork.orig/src/Scripts/UPSMON/COMMON/vehicles/fnc/UPSMON_GetNearestVehicles.sqf	2020-05-18 13:12:04.373821253 +0000
++++ A3-Antistasi-Greenfork/src/Scripts/UPSMON/COMMON/vehicles/fnc/UPSMON_GetNearestVehicles.sqf	2020-05-18 13:14:37.256143970 +0000
 @@ -11,7 +11,7 @@
  Returns:
  	Array vehicles [[vehicles,emptypositions]]
@@ -22,7 +22,7 @@ Index: A3-Antistasi-Greenfork/src/Scripts/UPSMON/COMMON/vehicles/fnc/UPSMON_GetN
 +		_islocked = _x getVariable "duenyo";
 +		_islocked = not isNil "_islocked";
 +
-+		if (((side _npc) == resistance) and _islocked) then _isowned = true;
++		if (((side _npc) == resistance) and _islocked) then {_isowned = true};
  		
  		_emptypositions = _Cargocount + _Gunnercount + _Commandercount + _Drivercount;
  		
