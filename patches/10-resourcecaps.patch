@@ -1,8 +1,17 @@
 Index: A3-Antistasi-Greenfork/src/resourcecheck.sqf
 ===================================================================
---- A3-Antistasi-Greenfork.orig/src/resourcecheck.sqf	2020-04-14 19:34:07.419546953 +0000
-+++ A3-Antistasi-Greenfork/src/resourcecheck.sqf	2020-04-14 19:37:02.789704451 +0000
-@@ -113,10 +113,12 @@
+--- A3-Antistasi-Greenfork.orig/src/resourcecheck.sqf	2020-05-19 16:20:26.853070018 +0000
++++ A3-Antistasi-Greenfork/src/resourcecheck.sqf	2020-05-21 06:00:21.987135617 +0000
+@@ -9,7 +9,7 @@
+ while {true} do
+ 	{
+ 	//sleep 600;//600
+-	nextTick = time + 600;
++	nextTick = time + incomeTick;
+ 	waitUntil {sleep 15; time >= nextTick};
+ 	if (isMultiplayer) then {waitUntil {sleep 10; isPlayer theBoss}};
+ 	_suppBoost = 1+ ({lados getVariable [_x,sideUnknown] == buenos} count puertos);
+@@ -113,10 +113,9 @@
  	_updated = [] call A3A_fnc_arsenalManage;
  	if (_updated != "") then {_texto = format ["%1<br/>Arsenal Updated<br/><br/>%2",_texto,_updated]};
  	[petros,"taxRep",_texto] remoteExec ["A3A_fnc_commsMP",[buenos,civilian]];
@@ -11,10 +20,7 @@ Index: A3-Antistasi-Greenfork/src/resourcecheck.sqf
 -	server setVariable ["hr",_hrAddBLUFOR,true];
 -	server setVariable ["resourcesFIA",_recAddSDK,true];
 +
-+	if((time + 45) > nextIncome) then {
-+		[_hrAddBLUFOR, _recAddSDK] call A3A_fnc_resourceTaxes;
-+		nextIncome = time + incomeTick;
-+	};
++	[_hrAddBLUFOR, _recAddSDK] call A3A_fnc_resourceTaxes;
 +
  	bombRuns = bombRuns + (({lados getVariable [_x,sideUnknown] == buenos} count aeropuertos) * 0.25);
  	[petros,"taxRep",_texto] remoteExec ["A3A_fnc_commsMP",[buenos,civilian]];
@@ -124,48 +130,3 @@ Index: A3-Antistasi-Greenfork/src/initServer.sqf
  _nul = call compile preprocessFileLineNumbers "initVar.sqf";
  initVar = true; publicVariable "initVar";
  savingServer = true;
-Index: A3-Antistasi-Greenfork/src/statSave/saveFuncs.sqf
-===================================================================
---- A3-Antistasi-Greenfork.orig/src/statSave/saveFuncs.sqf	2020-04-07 22:55:01.239497933 +0000
-+++ A3-Antistasi-Greenfork/src/statSave/saveFuncs.sqf	2020-04-14 19:26:05.628861550 +0000
-@@ -44,7 +44,7 @@
- 	"prestigeNATO","prestigeCSAT", "hr","planesAAFcurrent","helisAAFcurrent","APCAAFcurrent","tanksAAFcurrent","armas","items","mochis","municion","fecha", "WitemsPlayer","prestigeOPFOR","prestigeBLUFOR","resourcesAAF","resourcesFIA","skillFIA"];
- */
- specialVarLoads =
--["puestosFIA","minas","estaticas","cuentaCA","antenas","mrkNATO","mrkSDK","prestigeNATO","prestigeCSAT","posHQ", "hr","armas","items","mochis","municion","fecha", "prestigeOPFOR","prestigeBLUFOR","resourcesFIA","skillFIA","distanciaSPWN","civPerc","maxUnits","destroyedCities","garrison","tasks","scorePlayer","rankPlayer","smallCAmrk","dinero","miembros","vehInGarage","destroyedBuildings","personalGarage","idlebases","idleassets","chopForest","weather","killZones","jna_dataList","controlesSDK","loadoutPlayer","mrkCSAT","nextTick","bombRuns","dificultad","gameMode","securedCities"];
-+["puestosFIA","minas","estaticas","cuentaCA","antenas","mrkNATO","mrkSDK","prestigeNATO","prestigeCSAT","posHQ", "hr","armas","items","mochis","municion","fecha", "prestigeOPFOR","prestigeBLUFOR","resourcesFIA","skillFIA","distanciaSPWN","civPerc","maxUnits","destroyedCities","garrison","tasks","scorePlayer","rankPlayer","smallCAmrk","dinero","miembros","vehInGarage","destroyedBuildings","personalGarage","idlebases","idleassets","chopForest","weather","killZones","jna_dataList","controlesSDK","loadoutPlayer","mrkCSAT","nextTick","nextIncome","bombRuns","dificultad","gameMode","securedCities"];
- //THIS FUNCTIONS HANDLES HOW STATS ARE LOADED
- fn_SetStat =
- {
-@@ -106,6 +106,7 @@
- 			};
- 		if(_varName == 'bombRuns') then {bombRuns = _varValue; publicVariable "bombRuns"};
- 		if(_varName == 'nextTick') then {nextTick = time + _varValue};
-+		if(_varName == 'nextIncome') then {nextIncome = time + _varValue};
- 		if(_varName == 'miembros') then {miembros = +_varValue; publicVariable "miembros"};
- 		if(_varName == 'smallCAmrk') then {smallCAmrk = +_varValue};
- 		if(_varName == 'mrkNATO') then {{lados setVariable [_x,malos,true]} forEach _varValue;};
-Index: A3-Antistasi-Greenfork/src/statSave/loadAccount.sqf
-===================================================================
---- A3-Antistasi-Greenfork.orig/src/statSave/loadAccount.sqf	2020-04-07 22:55:01.238497937 +0000
-+++ A3-Antistasi-Greenfork/src/statSave/loadAccount.sqf	2020-04-14 19:26:25.903764146 +0000
-@@ -174,6 +174,7 @@
- 	*/
- 	["posHQ"] call fn_LoadStat;
- 	["nextTick"] call fn_LoadStat;
-+	["nextIncome"] call fn_LoadStat;
- 	["estaticas"] call fn_LoadStat;//tiene que ser el último para que el sleep del borrado del contenido no haga que despawneen
- 
- 
-Index: A3-Antistasi-Greenfork/src/statSave/saveLoop.sqf
-===================================================================
---- A3-Antistasi-Greenfork.orig/src/statSave/saveLoop.sqf	2020-04-07 22:55:01.240497931 +0000
-+++ A3-Antistasi-Greenfork/src/statSave/saveLoop.sqf	2020-04-14 19:26:44.061676913 +0000
-@@ -69,6 +69,7 @@
- 	["chopForest", chopForest] call fn_SaveStat;
- 	["maxUnits", maxUnits] call fn_SaveStat;
- 	["nextTick", nextTick - time] call fn_SaveStat;
-+	["nextIncome", nextIncome - time] call fn_SaveStat;
- 	/*
- 	["unlockedWeapons", unlockedWeapons] call fn_SaveStat;
- 	["unlockedItems", unlockedItems] call fn_SaveStat;
