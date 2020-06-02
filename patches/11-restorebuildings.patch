@@ -319,12 +319,12 @@ Index: A3-Antistasi-Greenfork/src/rebuildAssets.sqf
 +};
 Index: A3-Antistasi-Greenfork/src/functions.hpp
 ===================================================================
---- A3-Antistasi-Greenfork.orig/src/functions.hpp	2020-04-15 10:55:09.577234887 +0000
-+++ A3-Antistasi-Greenfork/src/functions.hpp	2020-04-15 10:55:09.591234810 +0000
+--- A3-Antistasi-Greenfork.orig/src/functions.hpp	2020-06-02 21:30:29.569828759 +0000
++++ A3-Antistasi-Greenfork/src/functions.hpp	2020-06-02 21:30:58.303714915 +0000
 @@ -257,5 +257,6 @@
-         class refreshCargoActions {file="refreshCargoActions.sqf";};
          class getDisplayName {file="getDisplayName.sqf";};
          class resourceTaxes {file="resourceTaxes.sqf";};
+         class sleepUntil {file="sleepUntil.sqf";};
 +        class isMilitaryBuilding {file="isMilitaryBuilding.sqf";};
  	}
  }
