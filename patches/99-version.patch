@@ -1,26 +1,22 @@
 Index: A3-Antistasi-Greenfork/src/description.ext
 ===================================================================
---- A3-Antistasi-Greenfork.orig/src/description.ext	2020-04-24 15:44:46.727068887 +0000
-+++ A3-Antistasi-Greenfork/src/description.ext	2020-04-24 15:45:03.497995116 +0000
-@@ -1,11 +1,11 @@
- #include "defines.hpp"
+--- A3-Antistasi-Greenfork.orig/src/description.ext	2020-06-02 16:47:41.872383754 +0000
++++ A3-Antistasi-Greenfork/src/description.ext	2020-06-02 16:47:49.534352368 +0000
+@@ -2,7 +2,9 @@
  #include "dialogs.hpp"
  
--__EXEC(upstreamVersion = "1.5.0");
--__EXEC(downstreamVersion = "2020-03-01");
+ author="Barbolani";
+-OnLoadName = "Antistasi Altis";
 +__EXEC(upstreamVersion = "1.5.1");
 +__EXEC(downstreamVersion = "2020-05-21");
- 
- author="Barbolani";
--OnLoadName = __EVAL(format ["Antistasi Altis %1 Greenfork %2", upstreamVersion, downstreamVersion]);
-+OnLoadName = __EVAL(format ["A3-AAGF %1 %2", upstreamVersion, downstreamVersion]);
++OnLoadName = __EVAL(format ["Antistasi Altis %1 Greenfork %2", upstreamVersion, downstreamVersion]);
  OnLoadMission = "Be a Resistance leader, be a hero";
  loadScreen = "pic.JPG";
  
 Index: A3-Antistasi-Greenfork/src/mission.sqm
 ===================================================================
---- A3-Antistasi-Greenfork.orig/src/mission.sqm	2020-04-24 15:41:50.888833063 +0000
-+++ A3-Antistasi-Greenfork/src/mission.sqm	2020-04-24 15:45:17.076935282 +0000
+--- A3-Antistasi-Greenfork.orig/src/mission.sqm	2020-06-02 16:47:29.746433429 +0000
++++ A3-Antistasi-Greenfork/src/mission.sqm	2020-06-02 16:47:41.924383541 +0000
 @@ -153,7 +153,7 @@
  {
  	class Intel
