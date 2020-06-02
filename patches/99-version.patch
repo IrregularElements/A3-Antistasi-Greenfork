@@ -8,7 +8,7 @@ Index: A3-Antistasi-Greenfork/src/description.ext
  author="Barbolani";
 -OnLoadName = "Antistasi Altis";
 +__EXEC(upstreamVersion = "1.5.1");
-+__EXEC(downstreamVersion = "2020-05-21");
++__EXEC(downstreamVersion = "2020-06-03");
 +OnLoadName = __EVAL(format ["Antistasi Altis %1 Greenfork %2", upstreamVersion, downstreamVersion]);
  OnLoadMission = "Be a Resistance leader, be a hero";
  loadScreen = "pic.JPG";
@@ -22,7 +22,7 @@ Index: A3-Antistasi-Greenfork/src/mission.sqm
  	class Intel
  	{
 -		briefingName="A3-Antistasi Altis";
-+		briefingName="A3-Antistasi Altis 1.5.1 2020-05-21";
++		briefingName="A3-Antistasi Altis 1.5.1 2020-06-03";
  		overviewText="Build FIA Army from scratch and defeat the AAF and CSAT forces in a whole map Dynamic Mission.";
  		resistanceWest=0;
  		startWeather=0;
