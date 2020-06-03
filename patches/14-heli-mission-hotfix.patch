@@ -1,0 +1,22 @@
+Index: A3-Antistasi-Greenfork/src/Missions/DES_Heli.sqf
+===================================================================
+--- A3-Antistasi-Greenfork.orig/src/Missions/DES_Heli.sqf	2020-04-24 15:41:50.888833063 +0000
++++ A3-Antistasi-Greenfork/src/Missions/DES_Heli.sqf	2020-06-03 01:02:10.738373453 +0000
+@@ -23,7 +23,7 @@
+ while {true} do
+ 	{
+ 	_poscrashOrig = _posicion getPos [_dist,_ang];
+-	if ((!surfaceIsWater _poscrash) and (_poscrash distance _posHQ < 4000)) exitWith {};
++	if ((!surfaceIsWater _poscrashOrig) and (_poscrashOrig distance _posHQ < 4000)) exitWith {};
+ 	_ang = _ang + 1;
+ 	_cuenta = _cuenta + 1;
+ 	if (_cuenta > 360) then
+@@ -35,7 +35,7 @@
+ 
+ _tipoVeh = selectRandom (vehPlanes + vehAttackHelis + vehTransportAir);
+ 
+-_posCrashMrk = [_poscrash,random 500,random 360] call BIS_fnc_relPos;
++_posCrashMrk = [_poscrashOrig,random 500,random 360] call BIS_fnc_relPos;
+ _posCrash = _posCrashOrig findEmptyPosition [0,100,_tipoVeh];
+ if (count _posCrash == 0) then
+ 	{
