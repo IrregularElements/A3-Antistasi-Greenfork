@@ -1,7 +1,7 @@
 Index: A3-Antistasi-Greenfork/src/initPlayerLocal.sqf
 ===================================================================
---- A3-Antistasi-Greenfork.orig/src/initPlayerLocal.sqf	2020-04-20 13:35:05.487646057 +0000
-+++ A3-Antistasi-Greenfork/src/initPlayerLocal.sqf	2020-04-20 13:57:14.810932762 +0000
+--- A3-Antistasi-Greenfork.orig/src/initPlayerLocal.sqf	2020-06-03 00:54:32.579760484 +0000
++++ A3-Antistasi-Greenfork/src/initPlayerLocal.sqf	2020-06-03 00:54:51.811660286 +0000
 @@ -674,3 +674,7 @@
  _layer = ["estadisticas"] call bis_fnc_rscLayer;
  _layer cutRsc ["H8erHUD","PLAIN",0,false];
@@ -9,4 +9,4 @@ Index: A3-Antistasi-Greenfork/src/initPlayerLocal.sqf
 +
 +{
 +	[_x] call jn_fnc_logisticsAddAction;
-+} forEach entities [[NATOAmmoBox, CSATAmmoBox]];
++} forEach entities [[NATOAmmoBox, CSATAmmoBox], []];
