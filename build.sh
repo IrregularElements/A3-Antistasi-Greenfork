@@ -7,7 +7,13 @@ SRCDIR="${SRCDIR-src}"
 ARMAKE2="${ARMAKE2-armake2}"
 
 export QUILT_PATCH_OPTS="--binary"
-quilt push -a
+QUILT_TOP="$(quilt top || echo)"
+quilt push -aq
+
+exit() {
+  quilt pop -aqf $QUILT_TOP
+}
+trap exit EXIT
 
 VER_UPSTREAM="${VER_UPSTREAM-$(grep -Po '(?<=upstreamVersion = ")[^"]+' src/description.ext)}"
 VER_FORK="${VER_FORK-$(grep -Po '(?<=downstreamVersion = ")[^"]+' src/description.ext)}"
@@ -17,5 +23,3 @@ VER_FORK="$(echo "$VER_FORK" | sed 's/\./_/g')"
 
 PBO="${PBO-A3 - Antistasi Altis ${VER_UPSTREAM} Greenfork ${VER_FORK}.Altis.pbo}"
 "$ARMAKE2" build "$SRCDIR" "$PBO"
-
-quilt pop -a
