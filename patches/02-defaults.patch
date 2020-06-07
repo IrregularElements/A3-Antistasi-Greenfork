@@ -1,8 +1,8 @@
 Index: A3-Antistasi-Greenfork/src/description.ext
 ===================================================================
---- A3-Antistasi-Greenfork.orig/src/description.ext	2020-03-28 15:54:39.242885805 +0000
-+++ A3-Antistasi-Greenfork/src/description.ext	2020-03-28 15:54:57.935651238 +0000
-@@ -94,7 +94,7 @@
+--- A3-Antistasi-Greenfork.orig/src/description.ext	2020-06-03 01:05:13.729420062 +0000
++++ A3-Antistasi-Greenfork/src/description.ext	2020-06-07 15:00:23.172977879 +0000
+@@ -91,7 +91,7 @@
          title = "Enable Server Membership";
          texts[] = {"Yes","No"};
          values[] = {1,0};
@@ -11,7 +11,7 @@ Index: A3-Antistasi-Greenfork/src/description.ext
          //function = "BIS_fnc_paramDaytime"; // (Optional) [[Functions_Library_(Arma_3)|Function]] [[call]]ed when player joins, selected value is passed as an argument
          //isGlobal = 1; // (Optional) 1 to execute script / function locally for every player who joins, 0 to do it only on server
      };
-@@ -111,7 +111,7 @@
+@@ -108,7 +108,7 @@
          title = "Enable Teamkill Punish";
          values[] = {1,0};
          texts[] = {"Yes","No"};

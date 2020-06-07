@@ -396,9 +396,9 @@ Index: A3-Antistasi-Greenfork/src/initServer.sqf
  serverInitDone = true; publicVariable "serverInitDone";
 Index: A3-Antistasi-Greenfork/src/initVar.sqf
 ===================================================================
---- A3-Antistasi-Greenfork.orig/src/initVar.sqf	2020-04-07 22:55:01.183498101 +0000
-+++ A3-Antistasi-Greenfork/src/initVar.sqf	2020-04-17 20:34:10.002407516 +0000
-@@ -645,7 +645,7 @@
+--- A3-Antistasi-Greenfork.orig/src/initVar.sqf	2020-06-07 15:00:44.105915163 +0000
++++ A3-Antistasi-Greenfork/src/initVar.sqf	2020-06-07 15:01:18.784811272 +0000
+@@ -661,7 +661,7 @@
  unlockedAA = [];
  garageIsUsed = false;
  vehInGarage = [];
@@ -421,9 +421,9 @@ Index: A3-Antistasi-Greenfork/src/statSave/loadAccount.sqf
  	_buildings = nearestObjects [_x, listMilBld, 25, true];
 Index: A3-Antistasi-Greenfork/src/statSave/saveFuncs.sqf
 ===================================================================
---- A3-Antistasi-Greenfork.orig/src/statSave/saveFuncs.sqf	2020-04-17 20:29:10.449377609 +0000
-+++ A3-Antistasi-Greenfork/src/statSave/saveFuncs.sqf	2020-04-17 20:35:27.824152741 +0000
-@@ -171,7 +171,7 @@
+--- A3-Antistasi-Greenfork.orig/src/statSave/saveFuncs.sqf	2020-06-07 15:01:17.771814307 +0000
++++ A3-Antistasi-Greenfork/src/statSave/saveFuncs.sqf	2020-06-07 15:01:18.785811269 +0000
+@@ -170,7 +170,7 @@
  		if(_varName == 'destroyedBuildings') then
  			{
  			destroyedBuildings= +_varValue;
@@ -432,7 +432,7 @@ Index: A3-Antistasi-Greenfork/src/statSave/saveFuncs.sqf
  			{
  			//(nearestBuilding _x) setDamage [1,false];
  			[nearestBuilding _x,[1,false]] remoteExec ["setDamage"];
-@@ -369,4 +369,4 @@
+@@ -368,4 +368,4 @@
  };
  
  //==================================================================================================================================================================================================

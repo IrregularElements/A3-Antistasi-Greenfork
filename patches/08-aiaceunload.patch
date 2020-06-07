@@ -1,8 +1,8 @@
 Index: A3-Antistasi-Greenfork/src/functions.hpp
 ===================================================================
---- A3-Antistasi-Greenfork.orig/src/functions.hpp	2020-04-07 22:50:40.767276792 +0000
-+++ A3-Antistasi-Greenfork/src/functions.hpp	2020-04-07 22:51:51.254066024 +0000
-@@ -251,4 +251,10 @@
+--- A3-Antistasi-Greenfork.orig/src/functions.hpp	2020-06-03 01:05:13.328422151 +0000
++++ A3-Antistasi-Greenfork/src/functions.hpp	2020-06-07 15:01:12.317830646 +0000
+@@ -250,4 +250,10 @@
          class isMedic {file="Revive\isMedic.sqf";};
          class respawn {file="Revive\respawn.sqf";};
  	}

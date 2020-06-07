@@ -1,8 +1,8 @@
 Index: A3-Antistasi-Greenfork/src/description.ext
 ===================================================================
---- A3-Antistasi-Greenfork.orig/src/description.ext	2020-04-03 03:52:54.606586315 +0000
-+++ A3-Antistasi-Greenfork/src/description.ext	2020-04-03 03:54:20.899131366 +0000
-@@ -156,9 +156,9 @@
+--- A3-Antistasi-Greenfork.orig/src/description.ext	2020-06-07 15:00:41.484923017 +0000
++++ A3-Antistasi-Greenfork/src/description.ext	2020-06-07 15:00:58.004873524 +0000
+@@ -153,9 +153,9 @@
      class civTraffic
      {
          title = "Rate of Civ Traffic";
