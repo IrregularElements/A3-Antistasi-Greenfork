@@ -1,7 +1,9 @@
-Index: A3-Antistasi-Greenfork/src/description.ext
-===================================================================
---- A3-Antistasi-Greenfork.orig/src/description.ext	2020-06-03 01:05:13.729420062 +0000
-+++ A3-Antistasi-Greenfork/src/description.ext	2020-06-07 15:00:23.172977879 +0000
+---
+ src/description.ext |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- a/src/description.ext
++++ b/src/description.ext
 @@ -91,7 +91,7 @@
          title = "Enable Server Membership";
          texts[] = {"Yes","No"};

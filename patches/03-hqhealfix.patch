@@ -1,7 +1,10 @@
-Index: A3-Antistasi-Greenfork/src/healandrepair.sqf
-===================================================================
---- A3-Antistasi-Greenfork.orig/src/healandrepair.sqf	2020-04-24 15:45:33.044864800 +0000
-+++ A3-Antistasi-Greenfork/src/healandrepair.sqf	2020-04-24 15:49:59.623670822 +0000
+---
+ src/healandrepair.sqf |    2 ++
+ src/initVar.sqf       |    1 +
+ 2 files changed, 3 insertions(+)
+
+--- a/src/healandrepair.sqf
++++ b/src/healandrepair.sqf
 @@ -7,6 +7,8 @@
  	if (hayACEMedical) then
  		{
@@ -11,10 +14,8 @@ Index: A3-Antistasi-Greenfork/src/healandrepair.sqf
  		}
  	else
  		{
-Index: A3-Antistasi-Greenfork/src/initVar.sqf
-===================================================================
---- A3-Antistasi-Greenfork.orig/src/initVar.sqf	2020-04-24 15:45:33.044864800 +0000
-+++ A3-Antistasi-Greenfork/src/initVar.sqf	2020-04-24 15:49:25.799823979 +0000
+--- a/src/initVar.sqf
++++ b/src/initVar.sqf
 @@ -741,6 +741,7 @@
  		"ACE_salineIV_250",
  		"ACE_surgicalKit",

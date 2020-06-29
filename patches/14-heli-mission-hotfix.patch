@@ -1,7 +1,9 @@
-Index: A3-Antistasi-Greenfork/src/Missions/DES_Heli.sqf
-===================================================================
---- A3-Antistasi-Greenfork.orig/src/Missions/DES_Heli.sqf	2020-04-24 15:41:50.888833063 +0000
-+++ A3-Antistasi-Greenfork/src/Missions/DES_Heli.sqf	2020-06-03 01:02:10.738373453 +0000
+---
+ src/Missions/DES_Heli.sqf |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- a/src/Missions/DES_Heli.sqf
++++ b/src/Missions/DES_Heli.sqf
 @@ -23,7 +23,7 @@
  while {true} do
  	{

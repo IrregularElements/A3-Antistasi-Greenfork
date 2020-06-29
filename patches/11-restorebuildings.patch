@@ -1,7 +1,17 @@
-Index: A3-Antistasi-Greenfork/src/dialogs.hpp
-===================================================================
---- A3-Antistasi-Greenfork.orig/src/dialogs.hpp	2020-04-15 10:55:09.534235121 +0000
-+++ A3-Antistasi-Greenfork/src/dialogs.hpp	2020-04-15 10:55:09.591234810 +0000
+---
+ src/dialogs.hpp              |   53 +++++++++-
+ src/functions.hpp            |    1 
+ src/init.sqf                 |    5 
+ src/initServer.sqf           |    5 
+ src/initVar.sqf              |    2 
+ src/isMilitaryBuilding.sqf   |   25 ++++
+ src/rebuildAssets.sqf        |  224 ++++++++++++++++++++++++++++++-------------
+ src/statSave/loadAccount.sqf |    1 
+ src/statSave/saveFuncs.sqf   |    4 
+ 9 files changed, 248 insertions(+), 72 deletions(-)
+
+--- a/src/dialogs.hpp
++++ b/src/dialogs.hpp
 @@ -136,8 +136,8 @@
  			y = 0.514003 * safezoneH + safezoneY;
  			w = 0.175015 * safezoneW;
@@ -69,10 +79,8 @@ Index: A3-Antistasi-Greenfork/src/dialogs.hpp
  class RscTitles {
  	class Default {
         idd = -1;
-Index: A3-Antistasi-Greenfork/src/rebuildAssets.sqf
-===================================================================
---- A3-Antistasi-Greenfork.orig/src/rebuildAssets.sqf	2020-04-17 16:11:24.927230768 +0000
-+++ A3-Antistasi-Greenfork/src/rebuildAssets.sqf	2020-04-17 16:13:36.211400806 +0000
+--- a/src/rebuildAssets.sqf
++++ b/src/rebuildAssets.sqf
 @@ -1,9 +1,13 @@
 -
 -_resourcesFIA = server getVariable "resourcesFIA";
@@ -317,10 +325,8 @@ Index: A3-Antistasi-Greenfork/src/rebuildAssets.sqf
 -[0,-5000] remoteExec ["A3A_fnc_resourcesFIA",2];
 \ No newline at end of file
 +};
-Index: A3-Antistasi-Greenfork/src/functions.hpp
-===================================================================
---- A3-Antistasi-Greenfork.orig/src/functions.hpp	2020-06-02 21:30:29.569828759 +0000
-+++ A3-Antistasi-Greenfork/src/functions.hpp	2020-06-02 21:30:58.303714915 +0000
+--- a/src/functions.hpp
++++ b/src/functions.hpp
 @@ -257,5 +257,6 @@
          class getDisplayName {file="getDisplayName.sqf";};
          class resourceTaxes {file="resourceTaxes.sqf";};
@@ -328,10 +334,8 @@ Index: A3-Antistasi-Greenfork/src/functions.hpp
 +        class isMilitaryBuilding {file="isMilitaryBuilding.sqf";};
  	}
  }
-Index: A3-Antistasi-Greenfork/src/isMilitaryBuilding.sqf
-===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ A3-Antistasi-Greenfork/src/isMilitaryBuilding.sqf	2020-04-15 10:55:09.591234810 +0000
+--- /dev/null
++++ b/src/isMilitaryBuilding.sqf
 @@ -0,0 +1,25 @@
 +params ["_building"];
 +
@@ -358,10 +362,8 @@ Index: A3-Antistasi-Greenfork/src/isMilitaryBuilding.sqf
 +};
 +
 +_isMilitary;
-Index: A3-Antistasi-Greenfork/src/init.sqf
-===================================================================
---- A3-Antistasi-Greenfork.orig/src/init.sqf	2020-05-16 13:29:09.343862676 +0000
-+++ A3-Antistasi-Greenfork/src/init.sqf	2020-05-16 13:36:01.726515384 +0000
+--- a/src/init.sqf
++++ b/src/init.sqf
 @@ -60,8 +60,13 @@
              if (_this select 2) then
                  {
@@ -376,10 +378,8 @@ Index: A3-Antistasi-Greenfork/src/init.sqf
          }];
      deleteMarker "respawn_east";
      if (buenos == independent) then {deleteMarker "respawn_west"} else {deleteMarker "respawn_guerrila"};
-Index: A3-Antistasi-Greenfork/src/initServer.sqf
-===================================================================
---- A3-Antistasi-Greenfork.orig/src/initServer.sqf	2020-05-16 13:35:20.601649741 +0000
-+++ A3-Antistasi-Greenfork/src/initServer.sqf	2020-05-16 13:35:40.036586246 +0000
+--- a/src/initServer.sqf
++++ b/src/initServer.sqf
 @@ -151,8 +151,13 @@
              if (_this select 2) then
                  {
@@ -394,10 +394,8 @@ Index: A3-Antistasi-Greenfork/src/initServer.sqf
          }];
  
  serverInitDone = true; publicVariable "serverInitDone";
-Index: A3-Antistasi-Greenfork/src/initVar.sqf
-===================================================================
---- A3-Antistasi-Greenfork.orig/src/initVar.sqf	2020-06-07 15:00:44.105915163 +0000
-+++ A3-Antistasi-Greenfork/src/initVar.sqf	2020-06-07 15:01:18.784811272 +0000
+--- a/src/initVar.sqf
++++ b/src/initVar.sqf
 @@ -661,7 +661,7 @@
  unlockedAA = [];
  garageIsUsed = false;
@@ -407,10 +405,8 @@ Index: A3-Antistasi-Greenfork/src/initVar.sqf
  hayTFAR = false;
  hayACRE = false;
  hayACE = false;
-Index: A3-Antistasi-Greenfork/src/statSave/loadAccount.sqf
-===================================================================
---- A3-Antistasi-Greenfork.orig/src/statSave/loadAccount.sqf	2020-04-17 20:29:10.450377606 +0000
-+++ A3-Antistasi-Greenfork/src/statSave/loadAccount.sqf	2020-04-17 20:34:53.164266348 +0000
+--- a/src/statSave/loadAccount.sqf
++++ b/src/statSave/loadAccount.sqf
 @@ -166,6 +166,7 @@
  
  	["chopForest"] call fn_LoadStat;
@@ -419,10 +415,8 @@ Index: A3-Antistasi-Greenfork/src/statSave/loadAccount.sqf
  	/*
  	{
  	_buildings = nearestObjects [_x, listMilBld, 25, true];
-Index: A3-Antistasi-Greenfork/src/statSave/saveFuncs.sqf
-===================================================================
---- A3-Antistasi-Greenfork.orig/src/statSave/saveFuncs.sqf	2020-06-07 15:01:17.771814307 +0000
-+++ A3-Antistasi-Greenfork/src/statSave/saveFuncs.sqf	2020-06-07 15:01:18.785811269 +0000
+--- a/src/statSave/saveFuncs.sqf
++++ b/src/statSave/saveFuncs.sqf
 @@ -170,7 +170,7 @@
  		if(_varName == 'destroyedBuildings') then
  			{

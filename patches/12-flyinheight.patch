@@ -1,7 +1,11 @@
-Index: A3-Antistasi-Greenfork/src/functions.hpp
-===================================================================
---- A3-Antistasi-Greenfork.orig/src/functions.hpp	2020-06-07 15:01:18.783811275 +0000
-+++ A3-Antistasi-Greenfork/src/functions.hpp	2020-06-07 15:01:23.538797030 +0000
+---
+ src/functions.hpp         |    1 +
+ src/initPlayerLocal.sqf   |    3 ++-
+ src/refreshFlyActions.sqf |   35 +++++++++++++++++++++++++++++++++++
+ 3 files changed, 38 insertions(+), 1 deletion(-)
+
+--- a/src/functions.hpp
++++ b/src/functions.hpp
 @@ -258,5 +258,6 @@
          class resourceTaxes {file="resourceTaxes.sqf";};
          class sleepUntil {file="sleepUntil.sqf";};
@@ -9,10 +13,8 @@ Index: A3-Antistasi-Greenfork/src/functions.hpp
 +        class refreshFlyActions {file="refreshFlyActions.sqf";};
  	}
  }
-Index: A3-Antistasi-Greenfork/src/initPlayerLocal.sqf
-===================================================================
---- A3-Antistasi-Greenfork.orig/src/initPlayerLocal.sqf	2020-04-21 22:53:51.442391873 +0000
-+++ A3-Antistasi-Greenfork/src/initPlayerLocal.sqf	2020-04-21 22:53:51.504391693 +0000
+--- a/src/initPlayerLocal.sqf
++++ b/src/initPlayerLocal.sqf
 @@ -660,10 +660,11 @@
  petros disableAI "AUTOTARGET";
  petros addAction ["Mission Request", {nul=CreateDialog "mission_menu";},nil,0,false,true,"","_this == theBoss"];
@@ -26,10 +28,8 @@ Index: A3-Antistasi-Greenfork/src/initPlayerLocal.sqf
  		} forEach ((units player) - [player]);
  	};
  }, 15]] call BIS_fnc_loop;
-Index: A3-Antistasi-Greenfork/src/refreshFlyActions.sqf
-===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ A3-Antistasi-Greenfork/src/refreshFlyActions.sqf	2020-04-21 20:40:13.481462404 +0000
+--- /dev/null
++++ b/src/refreshFlyActions.sqf
 @@ -0,0 +1,35 @@
 +params ["_unit"];
 +

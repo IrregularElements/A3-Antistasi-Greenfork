@@ -1,7 +1,10 @@
-Index: A3-Antistasi-Greenfork/src/description.ext
-===================================================================
---- A3-Antistasi-Greenfork.orig/src/description.ext	2020-06-07 15:00:41.484923017 +0000
-+++ A3-Antistasi-Greenfork/src/description.ext	2020-06-07 15:00:58.004873524 +0000
+---
+ src/description.ext |    6 +++---
+ src/initServer.sqf  |    2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+--- a/src/description.ext
++++ b/src/description.ext
 @@ -153,9 +153,9 @@
      class civTraffic
      {
@@ -15,10 +18,8 @@ Index: A3-Antistasi-Greenfork/src/description.ext
          //file = "setViewDistance.sqf"; // (Optional) Script [[call]]ed when player joins, selected value is passed as an argument
      };
      class memberSlots
-Index: A3-Antistasi-Greenfork/src/initServer.sqf
-===================================================================
---- A3-Antistasi-Greenfork.orig/src/initServer.sqf	2020-04-03 03:40:09.606592569 +0000
-+++ A3-Antistasi-Greenfork/src/initServer.sqf	2020-04-03 03:54:44.924004625 +0000
+--- a/src/initServer.sqf
++++ b/src/initServer.sqf
 @@ -26,7 +26,7 @@
  pvpEnabled = if (paramsArray select 7 == 1) then {true} else {false};
  skillMult = paramsArray select 9; publicVariable "skillMult";

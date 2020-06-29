@@ -1,7 +1,9 @@
-Index: A3-Antistasi-Greenfork/src/Scripts/UPSMON/COMMON/vehicles/fnc/UPSMON_GetNearestVehicles.sqf
-===================================================================
---- A3-Antistasi-Greenfork.orig/src/Scripts/UPSMON/COMMON/vehicles/fnc/UPSMON_GetNearestVehicles.sqf	2020-05-18 13:12:04.373821253 +0000
-+++ A3-Antistasi-Greenfork/src/Scripts/UPSMON/COMMON/vehicles/fnc/UPSMON_GetNearestVehicles.sqf	2020-05-18 13:14:37.256143970 +0000
+---
+ src/Scripts/UPSMON/COMMON/vehicles/fnc/UPSMON_GetNearestVehicles.sqf |   12 ++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+--- a/src/Scripts/UPSMON/COMMON/vehicles/fnc/UPSMON_GetNearestVehicles.sqf
++++ b/src/Scripts/UPSMON/COMMON/vehicles/fnc/UPSMON_GetNearestVehicles.sqf
 @@ -11,7 +11,7 @@
  Returns:
  	Array vehicles [[vehicles,emptypositions]]

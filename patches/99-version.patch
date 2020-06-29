@@ -1,7 +1,10 @@
-Index: A3-Antistasi-Greenfork/src/description.ext
-===================================================================
---- A3-Antistasi-Greenfork.orig/src/description.ext	2020-06-02 16:47:41.872383754 +0000
-+++ A3-Antistasi-Greenfork/src/description.ext	2020-06-02 16:47:49.534352368 +0000
+---
+ src/description.ext |    4 +++-
+ src/mission.sqm     |    2 +-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
+
+--- a/src/description.ext
++++ b/src/description.ext
 @@ -2,7 +2,9 @@
  #include "dialogs.hpp"
  
@@ -13,10 +16,8 @@ Index: A3-Antistasi-Greenfork/src/description.ext
  OnLoadMission = "Be a Resistance leader, be a hero";
  loadScreen = "pic.JPG";
  
-Index: A3-Antistasi-Greenfork/src/mission.sqm
-===================================================================
---- A3-Antistasi-Greenfork.orig/src/mission.sqm	2020-06-02 16:47:29.746433429 +0000
-+++ A3-Antistasi-Greenfork/src/mission.sqm	2020-06-02 16:47:41.924383541 +0000
+--- a/src/mission.sqm
++++ b/src/mission.sqm
 @@ -153,7 +153,7 @@
  {
  	class Intel

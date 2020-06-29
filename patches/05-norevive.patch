@@ -1,7 +1,10 @@
-Index: A3-Antistasi-Greenfork/src/CREATE/FIAinitBASES.sqf
-===================================================================
---- A3-Antistasi-Greenfork.orig/src/CREATE/FIAinitBASES.sqf	2020-03-29 14:38:34.868127240 +0000
-+++ A3-Antistasi-Greenfork/src/CREATE/FIAinitBASES.sqf	2020-03-29 15:08:45.053456129 +0000
+---
+ src/CREATE/FIAinitBASES.sqf |    2 +-
+ src/REINF/FIAinit.sqf       |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+--- a/src/CREATE/FIAinitBASES.sqf
++++ b/src/CREATE/FIAinitBASES.sqf
 @@ -21,7 +21,7 @@
  			}
  		};
@@ -11,10 +14,8 @@ Index: A3-Antistasi-Greenfork/src/CREATE/FIAinitBASES.sqf
  
  _unit allowFleeing 0;
  _tipo = typeOf _unit;
-Index: A3-Antistasi-Greenfork/src/REINF/FIAinit.sqf
-===================================================================
---- A3-Antistasi-Greenfork.orig/src/REINF/FIAinit.sqf	2020-03-29 14:38:35.136124920 +0000
-+++ A3-Antistasi-Greenfork/src/REINF/FIAinit.sqf	2020-03-29 15:08:23.563642170 +0000
+--- a/src/REINF/FIAinit.sqf
++++ b/src/REINF/FIAinit.sqf
 @@ -2,7 +2,7 @@
  
  _unit = _this select 0;

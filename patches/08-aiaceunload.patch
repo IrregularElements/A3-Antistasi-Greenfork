@@ -1,7 +1,13 @@
-Index: A3-Antistasi-Greenfork/src/functions.hpp
-===================================================================
---- A3-Antistasi-Greenfork.orig/src/functions.hpp	2020-06-03 01:05:13.328422151 +0000
-+++ A3-Antistasi-Greenfork/src/functions.hpp	2020-06-07 15:01:12.317830646 +0000
+---
+ src/functions.hpp           |    8 +++++-
+ src/getDisplayName.sqf      |    9 ++++++
+ src/initPlayerLocal.sqf     |   10 ++++++-
+ src/refreshCargoActions.sqf |   57 ++++++++++++++++++++++++++++++++++++++++++++
+ src/unloadCargoAction.sqf   |   38 +++++++++++++++++++++++++++++
+ 5 files changed, 120 insertions(+), 2 deletions(-)
+
+--- a/src/functions.hpp
++++ b/src/functions.hpp
 @@ -250,4 +250,10 @@
          class isMedic {file="Revive\isMedic.sqf";};
          class respawn {file="Revive\respawn.sqf";};
@@ -15,10 +21,8 @@ Index: A3-Antistasi-Greenfork/src/functions.hpp
 +        class getDisplayName {file="getDisplayName.sqf";};
 +	}
 +}
-Index: A3-Antistasi-Greenfork/src/getDisplayName.sqf
-===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ A3-Antistasi-Greenfork/src/getDisplayName.sqf	2020-04-07 22:53:16.994809644 +0000
+--- /dev/null
++++ b/src/getDisplayName.sqf
 @@ -0,0 +1,9 @@
 +params ["_o"];
 +
@@ -29,10 +33,8 @@ Index: A3-Antistasi-Greenfork/src/getDisplayName.sqf
 +};
 +
 +getText (configFile >> "CfgVehicles" >> _class >> "displayName")
-Index: A3-Antistasi-Greenfork/src/initPlayerLocal.sqf
-===================================================================
---- A3-Antistasi-Greenfork.orig/src/initPlayerLocal.sqf	2020-04-07 22:47:47.777794048 +0000
-+++ A3-Antistasi-Greenfork/src/initPlayerLocal.sqf	2020-04-07 22:52:48.279895507 +0000
+--- a/src/initPlayerLocal.sqf
++++ b/src/initPlayerLocal.sqf
 @@ -646,8 +646,16 @@
  petros disableAI "AUTOTARGET";
  petros addAction ["Mission Request", {nul=CreateDialog "mission_menu";},nil,0,false,true,"","_this == theBoss"];
@@ -52,10 +54,8 @@ Index: A3-Antistasi-Greenfork/src/initPlayerLocal.sqf
 -[] spawn A3A_fnc_statistics;
 \ No newline at end of file
 +[] spawn A3A_fnc_statistics;
-Index: A3-Antistasi-Greenfork/src/refreshCargoActions.sqf
-===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ A3-Antistasi-Greenfork/src/refreshCargoActions.sqf	2020-05-16 21:14:43.031556536 +0000
+--- /dev/null
++++ b/src/refreshCargoActions.sqf
 @@ -0,0 +1,57 @@
 +params ["_unit", ["_distance", 50]];
 +
@@ -114,10 +114,8 @@ Index: A3-Antistasi-Greenfork/src/refreshCargoActions.sqf
 +_unit setVariable ["A3A_ACECargoActions", _cargoActions];
 +
 +_newActionCount
-Index: A3-Antistasi-Greenfork/src/unloadCargoAction.sqf
-===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ A3-Antistasi-Greenfork/src/unloadCargoAction.sqf	2020-04-07 22:54:13.994639206 +0000
+--- /dev/null
++++ b/src/unloadCargoAction.sqf
 @@ -0,0 +1,38 @@
 +params ["_target", "_caller", "_actionId", "_arguments"];
 +_arguments params ["_item", "_vehicle", ["_radius", 100]];
